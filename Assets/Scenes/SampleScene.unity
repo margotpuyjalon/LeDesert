@@ -122,6 +122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 57289666}
   - component: {fileID: 57289667}
+  - component: {fileID: 57289668}
   m_Layer: 0
   m_Name: background
   m_TagString: Untagged
@@ -191,6 +192,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &57289668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 57289665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94f0134cdd904ec4897587fbc2de96b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deck: 
+  indexToPick: 0
 --- !u!1 &212763531
 GameObject:
   m_ObjectHideFlags: 0
