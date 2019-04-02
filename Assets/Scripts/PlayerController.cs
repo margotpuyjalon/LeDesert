@@ -48,18 +48,32 @@ public class PlayerController : MonoBehaviour
 			actionPoints--;
 			tile.nbSandBlocks--;
 		}
-	}
+	
+	*/
 
 	// Discover tile
-	public void discover(Tile tile)
+	public void discover()
 	{
 		if (actionPoints != 0)
 		{
-			actionPoints--;
-			tile.isDiscovered = true;
+			GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile"); // get all inPlayTiles
+			foreach (GameObject tile in tiles)
+			{
+				if (tile.transform.position.x == transform.position.x && tile.transform.position.y == transform.position.y)
+				{
+					
+					Tile temp = tile.GetComponent<Tile>();
+					temp.transform.Translate(new Vector3(1000, 0, 200));
+					temp.isDiscovered = true;
+					actionPoints--;
+
+					temp.tag = "DiscoveredTile";
+				}
+			}
 		}
 	}
 
+	/*
 	// Use an item
 	public void useItem(Item item)
 	{

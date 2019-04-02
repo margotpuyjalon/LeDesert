@@ -121,7 +121,8 @@ public class Map : MonoBehaviour
                         break;
                 }
                 GameObject tile = Instantiate(tileType);
-                tile.transform.position = new Vector3(-1.5f + i, 2.5f - j, 1);
+				tile.tag = "InPlayTile";
+				tile.transform.position = new Vector3(-1.5f + i, 2.5f - j, 1);
             }
         }
     }
