@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
-public class Tile : ScriptableObject
+public class Tile : MonoBehaviour
 {
     public int type;
     public bool isDiscovered;
     public int nbSandBlocks;
+	public Text m_Text;
 
-    public Tile(int t)
+	public Tile(int t)
     {
         type = t;
         isDiscovered = false;
@@ -24,6 +26,6 @@ public class Tile : ScriptableObject
     // Update is called once per frame
     void Update()
     {
-        
-    }
+		m_Text.text = "" + nbSandBlocks;
+	}
 }
