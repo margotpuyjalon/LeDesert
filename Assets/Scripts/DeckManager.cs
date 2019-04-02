@@ -24,17 +24,17 @@ public class DeckManager : MonoBehaviour
         MoveThreeToBot,
     };
     //
-    int nbHeatWave = 2; 
-    int nbDifficultyUp = 2; 
+    int nbHeatWave = 3; 
+    int nbDifficultyUp = 4; 
     //
     int nbMoveOneToLeft = 2; 
     int nbMoveOneToRight = 2; 
-    int nbMoveOneToTop = 2; 
+    int nbMoveOneToTop = 2;
     int nbMoveOneToBot = 2;
     //
     int nbMoveTwoToLeft = 2; 
     int nbMoveTwoToRight = 2; 
-    int nbMoveTwoToTop = 2; 
+    int nbMoveTwoToTop = 2;
     int nbMoveTwoToBot = 2;
     //
     int nbMoveThreeToLeft = 2;
