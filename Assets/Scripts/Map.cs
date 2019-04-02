@@ -9,6 +9,7 @@ enum Type
     START,
     END,
     TUNNEL,
+    STORM,
     HP1,
     VP1,
     HP2,
@@ -23,16 +24,19 @@ public class Map : MonoBehaviour
 {
     const int NB_TILE = 25;
 
-    public GameObject Tile_tech, Tile_source, Tile_start, Tile_end, Tile_tunnel;
+    public GameObject Tile_tech, Tile_source, Tile_start, Tile_end, Tile_tunnel, Tile_storm;
 
-    private Tile[,] map;
+    private Tile[,] map; 
     private Tile[] mendatoryTiles;
-    private int difficulty;
-    private int sandBlocksLeft;
+    private int difficulty = 0;
+    private int sandBlocksLeft = 40;
+
+    public DeckManager deck;
 
     // Start is called before the first frame update
     void Start()
     {
+        deck = new DeckManager(); 
         mendatoryTiles = new Tile[]
             {
                 new Tile((int)Type.SOURCE),
@@ -40,7 +44,7 @@ public class Map : MonoBehaviour
                 new Tile((int)Type.START),
                 new Tile((int)Type.END),
                 new Tile((int)Type.HP1), new Tile((int)Type.VP1),
-                new Tile((int)Type.TECH), new Tile((int)Type.TECH), new Tile((int)Type.TECH), new Tile((int)Type.TECH), new Tile((int)Type.TECH),
+                new Tile((int)Type.TECH), new Tile((int)Type.STORM), new Tile((int)Type.TECH), new Tile((int)Type.TECH), new Tile((int)Type.TECH),
                 new Tile((int)Type.TECH), new Tile((int)Type.TECH), new Tile((int)Type.TECH), new Tile((int)Type.TECH), new Tile((int)Type.TECH),
                 new Tile((int)Type.TECH), new Tile((int)Type.TECH), new Tile((int)Type.TECH), new Tile((int)Type.TECH), new Tile((int)Type.TECH),
                 new Tile((int)Type.TECH), new Tile((int)Type.TECH), new Tile((int)Type.TECH)
@@ -116,6 +120,9 @@ public class Map : MonoBehaviour
                     case Type.TUNNEL:
                         tileType = Tile_tunnel;
                         break;
+                    case Type.STORM:
+                        tileType = Tile_storm;
+                        break;
                     default:
                         tileType = Tile_tech;
                         break;
@@ -124,6 +131,77 @@ public class Map : MonoBehaviour
                 tile.transform.position = new Vector3(-1.5f + i, 2.5f - j, 1);
             }
         }
+    }
+
+    void NextTurn()
+    {
+        print(deck.PickNextCard());
+        // TODO déplacement de la tornade
+        // A remplacer par l'accès direct au vecteur de mvt ???
+        switch (deck.PickNextCard())
+        {
+            case (int)DeckManager.CardsType.DifficultyUp:
+                ChangeDifficulty();
+                break;
+
+            case (int)DeckManager.CardsType.MoveOneToBot:
+
+                break;
+            case (int)DeckManager.CardsType.MoveOneToTop:
+
+                break;
+            case (int)DeckManager.CardsType.MoveOneToLeft:
+
+                break;
+            case (int)DeckManager.CardsType.MoveOneToRight:
+
+                break;
+
+            case (int)DeckManager.CardsType.MoveTwoToBot:
+
+                break;
+            case (int)DeckManager.CardsType.MoveTwoToTop:
+
+                break;
+            case (int)DeckManager.CardsType.MoveTwoToLeft:
+
+                break;
+            case (int)DeckManager.CardsType.MoveTwoToRight:
+
+                break;
+
+            case (int)DeckManager.CardsType.MoveThreeToBot:
+
+                break;
+            case (int)DeckManager.CardsType.MoveThreeToTop:
+
+                break;
+            case (int)DeckManager.CardsType.MoveThreeToLeft:
+
+                break;
+            case (int)DeckManager.CardsType.MoveThreeToRight:
+
+                break;
+
+            case (int)DeckManager.CardsType.HeatWave:
+                break;
+            default:
+                break;
+        }
+    }
+
+    void ChangeDifficulty()
+    {
+        difficulty++;
+        if (difficulty == 4)
+        {
+            EndGame();
+        }
+    }
+
+    void EndGame()
+    {
+        print("Fin de la partie ! Vous avez perdu.");
     }
 
     // FOR DEBUG

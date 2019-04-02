@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DeckManager : MonoBehaviour
-{
+public class DeckManager {
     public List<int> deck = new List<int>();
     public int indexToPick = 0;
 
-    enum CardsType {
+    public enum CardsType {
         HeatWave,
         DifficultyUp,
         MoveOneToLeft,
@@ -42,8 +41,7 @@ public class DeckManager : MonoBehaviour
     int nbMoveThreeToTop = 2;
     int nbMoveThreeToBot = 2; 
 
-    // Start is called before the first frame update
-    void Start()
+    public DeckManager()
     {
         CreateDeck();
         Shuffle();
@@ -67,12 +65,6 @@ public class DeckManager : MonoBehaviour
         for (int i = 0; i < nbMoveThreeToBot; i++) { deck.Add((int)CardsType.MoveThreeToBot); }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void Shuffle() {
         // mélange de Fisher-Yates ou de Knuth
         for (int i = 0; i < deck.Count; i++)
@@ -93,7 +85,7 @@ public class DeckManager : MonoBehaviour
             indexToPick = 0;
 
         }
-        else { indexToPick++; }
+        else { indexToPick++; }  
 
         return cardToReturn;
     }
