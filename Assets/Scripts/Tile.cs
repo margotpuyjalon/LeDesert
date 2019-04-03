@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-	public int type;
-	public bool isDiscovered;
-	public int nbSandBlocks;
-	public Item item;
+    public int type;
+    public bool isDiscovered;
+    public int nbSandBlocks;
+    public Item item;
 
 	public Tile(int t)
     {

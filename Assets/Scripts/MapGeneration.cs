@@ -35,7 +35,7 @@ public class EvaluatedMap
 
 public class MapGeneration : MonoBehaviour
 {
-    private const int NB_MAP = 10;
+    private const int NB_MAP = 100;
 
     // Create n basic map
     void CreateNewMaps(int n, List<EvaluatedMap> map)
@@ -55,7 +55,7 @@ public class MapGeneration : MonoBehaviour
                         {
                             Type.HP1, Type.VP1,
                             Type.TECH,
-                            Type.TECH, Type.TECH
+                            Type.HP2, Type.VP2
                         },
                         {
                             Type.STORM, Type.TECH, Type.TECH, Type.TECH, Type.TECH
@@ -66,7 +66,7 @@ public class MapGeneration : MonoBehaviour
                         {
                             Type.TECH, Type.TECH, Type.TECH, Type.TECH, Type.TECH
                         }
-                    }, 10));
+                    }, 100));
         }
     }
 
@@ -93,21 +93,63 @@ public class MapGeneration : MonoBehaviour
     // Evaluate a map
     void EvaluateMap(EvaluatedMap m, int x, int y)
     {
+        // Initialize clue positions to avoid conflics with true positions
+        int hp1 = -1, vp1 = -1,
+            hp2 = -2, vp2 = -2,
+            hp3 = -3, vp3 = -3,
+            hp4 = -4, vp4 = -4;
+
+        // Run through all tiles
         for (int i = 0; i < x; i++)
         {
             for (int j = 0; j < y; j++)
             {
+                Type current = m.TypesMap[j, i];
                 // Check if the storm is on a border
                 if ((i == 0
                     || i == x - 1
                     || j == 0 
                     || j == y-1)
-                    && m.TypesMap[j, i] == Type.STORM)
+                    && current == Type.STORM)
                 {
-                    m.Eval = 0;
+                    m.Eval -= 10;
                 }
+
+                // Get clue location for ship's pieces
+                if (current == Type.HP1) hp1 = i;
+                if (current == Type.VP1) vp1 = j;
+                if (current == Type.HP2) hp2 = i;
+                if (current == Type.VP2) vp2 = j;
+                if (current == Type.HP3) hp3 = i;
+                if (current == Type.VP3) vp3 = j;
+                if (current == Type.HP4) hp4 = i;
+                if (current == Type.VP4) vp4 = j;
             }
         }
+
+        // Check if some ship's pieces are on the same tile
+        Vector2[] p = new Vector2[]
+        {
+            new Vector2( vp1, hp1 ),
+            new Vector2( vp2, hp2 ),
+            new Vector2( vp3, hp3 ),
+            new Vector2( vp4, hp4 )
+        };
+        if (ContainsDuplicates(p)) m.Eval -= 20;
+        
+    }
+
+    // Check duplicates in an array of Vectors
+    private bool ContainsDuplicates(Vector2[] a)
+    {
+        for (int i = 0; i < a.Length; i++)
+        {
+            for (int j = i + 1; j < a.Length; j++)
+            {
+                if (a[i] == a[j]) return true;
+            }
+        }
+        return false;
     }
 
     // EvaluatedMap comparer
@@ -140,21 +182,26 @@ public class MapGeneration : MonoBehaviour
 
         mapList.Sort(EvMapComparer);
 
+        foreach(EvaluatedMap m in mapList)
+        {
+            Display(m, 5, 5);
+        }
+
         return mapList[0].TypesMap;
     }
 
     // FOR DEBUG
-    //void Display(EvaluatedMap m, int x, int y)
-    //{
-    //    string msg = "map e = "+m.Eval + "\n";
-    //    for (int i = 0; i < x; i++)
-    //    {
-    //        for (int j = 0; j < y; j++)
-    //        {
-    //            msg += m.TypesMap[j, i] + " ";
-    //        }
-    //        msg += "\n";
-    //    }
-    //    print(msg);
-    //}
+    void Display(EvaluatedMap m, int x, int y)
+    {
+        string msg = "map e = " + m.Eval + "\n";
+        for (int i = 0; i < x; i++)
+        {
+            for (int j = 0; j < y; j++)
+            {
+                msg += m.TypesMap[j, i] + " ";
+            }
+            msg += "\n";
+        }
+        print(msg);
+    }
 }
