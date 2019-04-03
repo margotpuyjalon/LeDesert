@@ -807,6 +807,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: 4
   actionPoints: 4
+  item: {fileID: 0}
 --- !u!212 &647192685
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1270,7 +1271,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 647192684}
-        m_MethodName: Discover
+        m_MethodName: Dig
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

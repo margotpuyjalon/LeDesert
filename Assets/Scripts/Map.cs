@@ -36,7 +36,7 @@ public class Map : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        deck = new DeckManager(); 
+        deck = new DeckManager();
         mendatoryTiles = new Tile[]
             {
                 new Tile((int)Type.SOURCE),
@@ -55,7 +55,7 @@ public class Map : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        NextTurn();
+        
     }
 
     // Crée une nouvelle matrice de tuiles
@@ -134,12 +134,12 @@ public class Map : MonoBehaviour
         }
     }
 
-    void NextTurn()
+    public void NextTurn()
     {
-        GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");
         print(deck.PickNextCard());
-        // TODO déplacement de la tornade
-        // A remplacer par l'accès direct au vecteur de mvt ???
+        GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");
+        GameObject objStorm = GameObject.Find("Tile_storm(Clone)");
+
         switch (deck.PickNextCard())
         {
             case (int)DeckManager.CardsType.DifficultyUp:
@@ -147,72 +147,166 @@ public class Map : MonoBehaviour
                 break;
 
             case (int)DeckManager.CardsType.MoveOneToBot:
-                for (int i = 0; i < 3; i++) // on ne check pas pour i = 4 puisque la tempete ne peut pas bouger dans ce cas
+                foreach (GameObject go in tiles)
                 {
-                    for (int j = 0; j < 5; j++)
+                    if (go.transform.position.x == objStorm.transform.position.x && go.transform.position.y == objStorm.transform.position.y - 1)
                     {
-                        Tile t = map[i, j];
-                        if (t.type == (int)Type.STORM) // On inverse les deux tuiles
-                        {
-                            // dans la matrice
-                            Tile temp = map[i + 1, j];
-                            map[i + 1, j] = t; 
-                            map[i, j] = temp;
-
-                            // dans le visuel
-                            GameObject objStorm = GameObject.Find("Tile_storm");
-                            foreach (GameObject go in tiles)
-                            {
-                                if (go.transform.position.x == objStorm.transform.position.x - 1 && go.transform.position.y == objStorm.transform.position.y)
-                                {
-                                    go.transform.position = new Vector3(-1.5f + i, 2.5f - j, 1);
-                                    break;
-                                }
-                            }
-                            
-
-                            objStorm.transform.position = new Vector3(-1.5f + (i + 1), 2.5f - (j + 1), 1); 
-                        }
+                        go.transform.Translate(new Vector3(0, 1, 0));
+                        objStorm.transform.Translate(new Vector3(0, -1, 0));
+                        break;
                     }
                 }
                 break;
             case (int)DeckManager.CardsType.MoveOneToTop:
-
+                foreach (GameObject go in tiles)
+                {
+                    if (go.transform.position.x == objStorm.transform.position.x && go.transform.position.y == objStorm.transform.position.y + 1)
+                    {
+                        go.transform.Translate(new Vector3(0, -1, 0));
+                        objStorm.transform.Translate(new Vector3(0, 1, 0));
+                        break;
+                    }
+                }
                 break;
             case (int)DeckManager.CardsType.MoveOneToLeft:
-
+                foreach (GameObject go in tiles)
+                {
+                    if (go.transform.position.x == objStorm.transform.position.x - 1 && go.transform.position.y == objStorm.transform.position.y)
+                    {
+                        go.transform.Translate(new Vector3(1, 0, 0));
+                        objStorm.transform.Translate(new Vector3(-1, 0, 0));
+                        break;
+                    }
+                }
                 break;
             case (int)DeckManager.CardsType.MoveOneToRight:
-
+                foreach (GameObject go in tiles)
+                {
+                    if (go.transform.position.x == objStorm.transform.position.x + 1 && go.transform.position.y == objStorm.transform.position.y)
+                    {
+                        go.transform.Translate(new Vector3(-1, 0, 0));
+                        objStorm.transform.Translate(new Vector3(1, 0, 0));
+                        break;
+                    }
+                }
                 break;
 
             case (int)DeckManager.CardsType.MoveTwoToBot:
-
+                for (int i = 0; i < 2; i++)
+                {
+                    foreach (GameObject go in tiles)
+                    {
+                        if (go.transform.position.x == objStorm.transform.position.x && go.transform.position.y == objStorm.transform.position.y - 1)
+                        {
+                            go.transform.Translate(new Vector3(0, 1, 0));
+                            objStorm.transform.Translate(new Vector3(0, -1, 0));
+                            break;
+                        }
+                    }
+                }              
                 break;
             case (int)DeckManager.CardsType.MoveTwoToTop:
-
+                for (int i=0; i < 2; i++)
+                {
+                    foreach (GameObject go in tiles)
+                    {
+                        if (go.transform.position.x == objStorm.transform.position.x && go.transform.position.y == objStorm.transform.position.y + 1)
+                        {
+                            go.transform.Translate(new Vector3(0, -1, 0));
+                            objStorm.transform.Translate(new Vector3(0, 1, 0));
+                            break;
+                        }
+                    }
+                }            
                 break;
             case (int)DeckManager.CardsType.MoveTwoToLeft:
-
+                for (int i = 0; i < 3; i++)
+                {
+                    foreach (GameObject go in tiles)
+                    {
+                        if (go.transform.position.x == objStorm.transform.position.x - 1 && go.transform.position.y == objStorm.transform.position.y)
+                        {
+                            go.transform.Translate(new Vector3(1, 0, 0));
+                            objStorm.transform.Translate(new Vector3(-1, 0, 0));
+                            break;
+                        }
+                    }
+                }
                 break;
             case (int)DeckManager.CardsType.MoveTwoToRight:
-
+                for (int i = 0; i < 3; i++)
+                {
+                    foreach (GameObject go in tiles)
+                    {
+                        if (go.transform.position.x == objStorm.transform.position.x + 1 && go.transform.position.y == objStorm.transform.position.y)
+                        {
+                            go.transform.Translate(new Vector3(-1, 0, 0));
+                            objStorm.transform.Translate(new Vector3(1, 0, 0));
+                            break;
+                        }
+                    }
+                }
                 break;
 
             case (int)DeckManager.CardsType.MoveThreeToBot:
-
+                for (int i = 0; i < 3; i++)
+                {
+                    foreach (GameObject go in tiles)
+                    {
+                        if (go.transform.position.x == objStorm.transform.position.x && go.transform.position.y == objStorm.transform.position.y - 1)
+                        {
+                            go.transform.Translate(new Vector3(0, 1, 0));
+                            objStorm.transform.Translate(new Vector3(0, -1, 0));
+                            break;
+                        }
+                    }
+                }
                 break;
             case (int)DeckManager.CardsType.MoveThreeToTop:
-
+                for (int i = 0; i < 3; i++)
+                {
+                    foreach (GameObject go in tiles)
+                    {
+                        if (go.transform.position.x == objStorm.transform.position.x && go.transform.position.y == objStorm.transform.position.y + 1)
+                        {
+                            go.transform.Translate(new Vector3(0, -1, 0));
+                            objStorm.transform.Translate(new Vector3(0, 1, 0));
+                            break;
+                        }
+                    }
+                }
                 break;
             case (int)DeckManager.CardsType.MoveThreeToLeft:
-
+                for (int i = 0; i < 3; i++)
+                {
+                    foreach (GameObject go in tiles)
+                    {
+                        if (go.transform.position.x == objStorm.transform.position.x - 1 && go.transform.position.y == objStorm.transform.position.y)
+                        {
+                            go.transform.Translate(new Vector3(1, 0, 0));
+                            objStorm.transform.Translate(new Vector3(-1, 0, 0));
+                            break;
+                        }
+                    }
+                }
                 break;
             case (int)DeckManager.CardsType.MoveThreeToRight:
-
+                for (int i = 0; i < 3; i++)
+                {
+                    foreach (GameObject go in tiles)
+                    {
+                        if (go.transform.position.x == objStorm.transform.position.x + 1 && go.transform.position.y == objStorm.transform.position.y)
+                        {
+                            go.transform.Translate(new Vector3(-1, 0, 0));
+                            objStorm.transform.Translate(new Vector3(1, 0, 0));
+                            break;
+                        }
+                    }
+                }
                 break;
 
             case (int)DeckManager.CardsType.HeatWave:
+                print("Argh...La chaleur augmente... !");
                 //PlayerController.changeLife(-1);
                 break;
             default:
@@ -223,7 +317,7 @@ public class Map : MonoBehaviour
     void ChangeDifficulty()
     {
         difficulty++;
-        print("Arg... La chaleur augmente, encore " + (4 - difficulty) + " fois et je vais y passer !");
+        print("Wow... Le vent devient encore plus violent, encore " + (4 - difficulty) + " fois et je vais y passer !");
         if (difficulty == 4)
         {
             EndGame();
