@@ -24,7 +24,6 @@ public class DeckManager {
     public List<int> deck = new List<int>();
     public int indexToPick = 0;
 
-   
     //
     int nbHeatWave = 3; 
     int nbDifficultyUp = 4; 
@@ -86,7 +85,7 @@ public class DeckManager {
         if (indexToPick == deck.Count - 1)
         {
             indexToPick = 0;
-
+            Shuffle();
         }
         else { indexToPick++; }  
 

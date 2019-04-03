@@ -12,7 +12,7 @@ public class Map : MonoBehaviour
     private Tile[,] map; 
     private Type[,] typesMap;
 
-    private int difficulty = 0;
+    private int difficulty = 1;
     private int sandBlocksLeft = 40;
 
     public DeckManager deck;
@@ -96,60 +96,66 @@ public class Map : MonoBehaviour
 
     public void NextTurn()
     {
-		CardsType carte = (CardsType)deck.PickNextCard();
-		print(carte);
         GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");
         GameObject objStorm = GameObject.Find("Tile_storm(Clone)");
         GameObject player = GameObject.Find("player");
 
-		switch ((int)carte)
+        int nbOfPick = (int)Mathf.Ceil(difficulty / 3.0f);
+        for (int i = 0; i < nbOfPick; i++)
         {
-            case (int)CardsType.DifficultyUp:
-                ChangeDifficulty();
-                break;
-            case (int)CardsType.MoveOneToBot:
-				SwitchTiles(0, -1, 1);
-				break;
-            case (int)CardsType.MoveOneToTop:
-				SwitchTiles(0, 1, 1);
-				break;
-            case (int)CardsType.MoveOneToLeft:
-				SwitchTiles(-1, 0, 1);
-				break;
-            case (int)CardsType.MoveOneToRight:
-				SwitchTiles(1, 0, 1);
-				break;
-            case (int)CardsType.MoveTwoToBot:
-				SwitchTiles(0, -1, 2);
-				break;
-            case (int)CardsType.MoveTwoToTop:
-				SwitchTiles(0, 1, 2);
-				break;
-            case (int)CardsType.MoveTwoToLeft:
-				SwitchTiles(-1, 0, 2);
-				break;
-            case (int)CardsType.MoveTwoToRight:
-				SwitchTiles(1, 0, 2);
-				break;
-            case (int)CardsType.MoveThreeToBot:
-				SwitchTiles(0, -1, 3);
-				break;
-            case (int)CardsType.MoveThreeToTop:
-				SwitchTiles(0, 1, 3);
-				break;
-            case (int)CardsType.MoveThreeToLeft:
-				SwitchTiles(-1, 0, 3);
-				break;
-            case (int)CardsType.MoveThreeToRight:
-				SwitchTiles(1, 0, 3);
-				break;
-            case (int)CardsType.HeatWave:
-                print("Argh...La chaleur augmente... !");
-                //PlayerController.changeLife(-1);
-                break;
-            default:
-                break;
+            CardsType card = (CardsType)deck.PickNextCard();
+            print(card);
+            switch ((int)card)
+            {
+                case (int)CardsType.DifficultyUp:
+                    ChangeDifficulty();
+                    break;
+                case (int)CardsType.MoveOneToBot:
+                    SwitchTiles(0, -1, 1);
+                    break;
+                case (int)CardsType.MoveOneToTop:
+                    SwitchTiles(0, 1, 1);
+                    break;
+                case (int)CardsType.MoveOneToLeft:
+                    SwitchTiles(-1, 0, 1);
+                    break;
+                case (int)CardsType.MoveOneToRight:
+                    SwitchTiles(1, 0, 1);
+                    break;
+                case (int)CardsType.MoveTwoToBot:
+                    SwitchTiles(0, -1, 2);
+                    break;
+                case (int)CardsType.MoveTwoToTop:
+                    SwitchTiles(0, 1, 2);
+                    break;
+                case (int)CardsType.MoveTwoToLeft:
+                    SwitchTiles(-1, 0, 2);
+                    break;
+                case (int)CardsType.MoveTwoToRight:
+                    SwitchTiles(1, 0, 2);
+                    break;
+                case (int)CardsType.MoveThreeToBot:
+                    SwitchTiles(0, -1, 3);
+                    break;
+                case (int)CardsType.MoveThreeToTop:
+                    SwitchTiles(0, 1, 3);
+                    break;
+                case (int)CardsType.MoveThreeToLeft:
+                    SwitchTiles(-1, 0, 3);
+                    break;
+                case (int)CardsType.MoveThreeToRight:
+                    SwitchTiles(1, 0, 3);
+                    break;
+                case (int)CardsType.HeatWave:
+                    player.GetComponent<PlayerController>().ChangeLife(-1);
+                    print("Argh...La chaleur augmente... ! " + "Points de vie restants : " + player.GetComponent<PlayerController>().hitPoints);
+                    break;
+                default:
+                    break;
+            }
         }
+        print("---");
+        player.GetComponent<PlayerController>().actionPoints = 4; // après la pioche on remet les points d'action au max
     }
 
 	private void SwitchTiles(int x, int y, int nbtimes)
@@ -174,8 +180,8 @@ public class Map : MonoBehaviour
     void ChangeDifficulty()
     {
         difficulty++;
-        print("Wow... Le vent devient encore plus violent, encore " + (4 - difficulty) + " fois et je vais y passer !");
-        if (difficulty == 4)
+        print("Wow... Le vent devient encore plus violent, encore " + (16 - difficulty) + " fois et je vais y passer !");
+        if (difficulty > 15)
         {
             EndGame();
         }
