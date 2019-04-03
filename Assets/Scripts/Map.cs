@@ -98,7 +98,7 @@ public class Map : MonoBehaviour
     {
         GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");
         GameObject objStorm = GameObject.Find("Tile_storm(Clone)");
-        GameObject player = GameObject.Find("player");
+        
 
         int nbOfPick = (int)Mathf.Ceil(difficulty / 3.0f);
         for (int i = 0; i < nbOfPick; i++)
@@ -162,6 +162,7 @@ public class Map : MonoBehaviour
 	{
 		GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");
 		GameObject objStorm = GameObject.Find("Tile_storm(Clone)");
+		GameObject player = GameObject.Find("player");
 
 		for (int i = 0; i < nbtimes; i++)
 		{
@@ -169,12 +170,15 @@ public class Map : MonoBehaviour
 			{
 				if (go.transform.position.x == objStorm.transform.position.x + x && go.transform.position.y == objStorm.transform.position.y + y)
 				{
+					
 					go.transform.Translate(new Vector3(-x, -y, 0));
 					objStorm.transform.Translate(new Vector3(x, y, 0));
+					if (player.transform.position.x == objStorm.transform.position.x && player.transform.position.y == objStorm.transform.position.y) player.transform.Translate(new Vector3(-x, -y, 0));
 					break;
 				}
 			}
 		}
+		AffichagePiece();
 	}
 
     void ChangeDifficulty()
@@ -192,17 +196,78 @@ public class Map : MonoBehaviour
         print("Fin de la partie ! Vous avez perdu.");
     }
 
-    // FOR DEBUG
-    //void Display(int x, int y)
-    //{
-    //    print("map");
-    //    for (int i = 0; i < x; i++)
-    //    {
-    //        for (int j = 0; j < y; j++)
-    //        {
-    //            print(map[i, j].type);
-    //        }
-    //    }
-    //}
+	public void AffichagePiece()
+	{
+		float HP1 = -40;
+		float HP2 = -40;
+		float HP3 = -40;
+		float HP4 = -40;
+		float VP1 = -40;
+		float VP2 = -40;
+		float VP3 = -40;
+		float VP4 = -40;
+
+		GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");
+
+		foreach (GameObject tile in tiles)
+		{
+			if (tile.GetComponent<Tile>().isDiscovered)
+			{
+				switch (tile.GetComponent<Tile>().type)
+				{
+					case (int)Type.HP1:
+						HP1 = tile.transform.position.x;
+						break;
+					case (int)Type.HP2:
+						HP2 = tile.transform.position.x;
+						break;
+					case (int)Type.HP3:
+						HP3 = tile.transform.position.x;
+						break;
+					case (int)Type.HP4:
+						HP4 = tile.transform.position.x;
+						break;
+					case (int)Type.VP1:
+						VP1 = tile.transform.position.y;
+						break;
+					case (int)Type.VP2:
+						VP2 = tile.transform.position.y;
+						break;
+					case (int)Type.VP3:
+						VP3 = tile.transform.position.y;
+						break;
+					case (int)Type.VP4:
+						VP4 = tile.transform.position.y;
+						break;
+				}
+			}
+		}
+
+		if (HP1 > -2 && VP1 > -2)
+		{ //LA PIECE EST EN (HP1,VP1)
+		}
+		if (HP2 > -2 && VP2 > -2)
+		{ //LA PIECE EST EN (HP2,VP2)
+		}
+		if (HP3 > -2 && VP3 > -2)
+		{ //LA PIECE EST EN (HP3,VP3)
+		}
+		if (HP4 > -2 && VP4 > -2)
+		{ //LA PIECE EST EN (HP4,VP4)
+		}
+
+		// FOR DEBUG
+		//void Display(int x, int y)
+		//{
+		//    print("map");
+		//    for (int i = 0; i < x; i++)
+		//    {
+		//        for (int j = 0; j < y; j++)
+		//        {
+		//            print(map[i, j].type);
+		//        }
+		//    }
+		//}
+	}
 
 }
