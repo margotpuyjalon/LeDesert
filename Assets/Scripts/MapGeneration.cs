@@ -33,7 +33,7 @@ public class EvaluatedMap
     }
 }
 
-public class MapGeneration : MonoBehaviour
+public class MapGeneration
 {
     private const int NB_MAP = 100;
 
@@ -202,6 +202,6 @@ public class MapGeneration : MonoBehaviour
             }
             msg += "\n";
         }
-        print(msg);
+        Debug.Log(msg);
     }
 }
