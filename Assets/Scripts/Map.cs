@@ -136,10 +136,11 @@ public class Map : MonoBehaviour
 
     void NextTurn()
     {
-        //print(deck.PickNextCard());
-
         GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");
-        switch (5) //deck.PickNextCard()
+        print(deck.PickNextCard());
+        // TODO déplacement de la tornade
+        // A remplacer par l'accès direct au vecteur de mvt ???
+        switch (deck.PickNextCard())
         {
             case (int)DeckManager.CardsType.DifficultyUp:
                 ChangeDifficulty();
@@ -172,7 +173,6 @@ public class Map : MonoBehaviour
 
                             objStorm.transform.position = new Vector3(-1.5f + (i + 1), 2.5f - (j + 1), 1); 
                         }
-
                     }
                 }
                 break;
