@@ -2,26 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum CardsType
+{
+	HeatWave,
+	DifficultyUp,
+	MoveOneToLeft,
+	MoveOneToRight,
+	MoveOneToTop,
+	MoveOneToBot,
+	MoveTwoToLeft,
+	MoveTwoToRight,
+	MoveTwoToTop,
+	MoveTwoToBot,
+	MoveThreeToLeft,
+	MoveThreeToRight,
+	MoveThreeToTop,
+	MoveThreeToBot,
+};
+
 public class DeckManager {
     public List<int> deck = new List<int>();
     public int indexToPick = 0;
 
-    public enum CardsType {
-        HeatWave,
-        DifficultyUp,
-        MoveOneToLeft,
-        MoveOneToRight,
-        MoveOneToTop,
-        MoveOneToBot,
-        MoveTwoToLeft,
-        MoveTwoToRight,
-        MoveTwoToTop,
-        MoveTwoToBot,
-        MoveThreeToLeft,
-        MoveThreeToRight,
-        MoveThreeToTop,
-        MoveThreeToBot,
-    };
+   
     //
     int nbHeatWave = 3; 
     int nbDifficultyUp = 4; 
