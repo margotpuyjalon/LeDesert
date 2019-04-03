@@ -98,7 +98,7 @@ public class Map : MonoBehaviour
     {
         GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");
         GameObject objStorm = GameObject.Find("Tile_storm(Clone)");
-        
+        GameObject player = GameObject.Find("player");
 
         int nbOfPick = (int)Mathf.Ceil(difficulty / 3.0f);
         for (int i = 0; i < nbOfPick; i++)
