@@ -5,27 +5,34 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    public int type;
-    public bool isDiscovered;
-    public int nbSandBlocks;
-	public Text m_Text;
+	public int type;
+	public bool isDiscovered;
+	public int nbSandBlocks;
+	public Item item;
 
 	public Tile(int t)
     {
         type = t;
         isDiscovered = false;
         nbSandBlocks = 0;
-    }
+	}
 
-    // Start is called before the first frame update
-    void Start()
+	// Start is called before the first frame update
+	void Start()
     {
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-		m_Text.text = "" + nbSandBlocks;
+	}
+
+	public Item GetItem()
+	{
+		//transform.Translate(new Vector3(1000, 0, 200));
+		isDiscovered = true;
+		item = new Item();
+		item = item.GenerateItem(type);
+		return item;
 	}
 }

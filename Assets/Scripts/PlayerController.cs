@@ -6,7 +6,8 @@ public class PlayerController : MonoBehaviour
 {
 	public int hitPoints = 4;
 	public int actionPoints = 4;
-	//public Item items[];
+	public List<Item> items = new List<Item>();
+	public GameObject item;
 
     // Start is called before the first frame update
     void Start()
@@ -18,90 +19,76 @@ public class PlayerController : MonoBehaviour
     {
 		Move();
 	}
+
 	// Translate character sprite
 	private void Move()
 	{
-		if (actionPoints != 10)
+		if (GetStandingTile().nbSandBlocks < 2 && actionPoints != 0)  // si tuile sur laquelle on est n'est pas ensablee
 		{
 			if (Input.GetKeyUp("up") && gameObject.transform.position.y < 2.5)
-				{ gameObject.transform.Translate(0, 1, 0); actionPoints--; }      // Up
+			{ gameObject.transform.Translate(0, 1, 0); actionPoints--; }      // Up
 			if (Input.GetKeyUp("down") && gameObject.transform.position.y > -1.5)
-				{ gameObject.transform.Translate(0, -1, 0); actionPoints--;}      // Down
+			{ gameObject.transform.Translate(0, -1, 0); actionPoints--; }      // Down
 			if (Input.GetKeyUp("right") && gameObject.transform.position.x < 2.5)
-				{ gameObject.transform.Translate(1, 0, 0); actionPoints--;}       // Right
+			{ gameObject.transform.Translate(1, 0, 0); actionPoints--; }       // Right
 			if (Input.GetKeyUp("left") && gameObject.transform.position.x > -1.5)
-				{ gameObject.transform.Translate(-1, 0, 0); actionPoints--; }     // Left
+			{ gameObject.transform.Translate(-1, 0, 0); actionPoints--; }     // Left
 		}
 	}
 
 	// Change player hit points
-	public void changeLife(int amount)
+	public void ChangeLife(int amount)
 	{
 		hitPoints += amount;
 	}
 
-	/* Dig sand
-	public void dig(Tile tile) //Type TILE a integrer
+	// Dig sand
+	public void Dig() //Type TILE a integrer
 	{
 		if (actionPoints != 0)
 		{
-			actionPoints--;
-			tile.nbSandBlocks--;
+			if (GetStandingTile().transform.position.x == transform.position.x && GetStandingTile().transform.position.y == transform.position.y)
+			{
+				if (GetStandingTile().GetComponent<Tile>().nbSandBlocks !=0)
+				{
+					GetStandingTile().GetComponent<Tile>().nbSandBlocks--;
+					actionPoints--;
+				}
+			}
 		}
-	
-	*/
+	}
 
 	// Discover tile
-	public void discover()
+	public void Discover()
 	{
 		if (actionPoints != 0)
 		{
-			GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile"); // get all inPlayTiles
-			foreach (GameObject tile in tiles)
+			if (GetStandingTile().transform.position.x == transform.position.x && GetStandingTile().transform.position.y == transform.position.y)
 			{
-				if (tile.transform.position.x == transform.position.x && tile.transform.position.y == transform.position.y)
-				{
-					
-					Tile temp = tile.GetComponent<Tile>();
-					temp.transform.Translate(new Vector3(1000, 0, 200));
-					temp.isDiscovered = true;
-					actionPoints--;
-
-					temp.tag = "DiscoveredTile";
-				}
+				items.Add(GetStandingTile().GetComponent<Tile>().GetItem());
+				actionPoints--;
 			}
 		}
 	}
 
-	/*
+	
 	// Use an item
-	public void useItem(Item item)
+	public void UseItem(int num)
 	{
-		//ON ENLEVE L'ITEM SELECTIONNE DE LA LISTE
-		if (item.type == "blaster")
+		items[num].UseItem(this.gameObject, this);
+		// IL FAUT L'ENLEVER DE LA LISTE
+	}
+
+	private Tile GetStandingTile()
+	{
+		GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile"); // get all inPlayTiles
+		foreach (GameObject tile in tiles)
 		{
-			dig(new Tile(gameObject.transform.position.x, gameObject.transform.position.y + 1));
-			dig(new Tile(gameObject.transform.position.x, gameObject.transform.position.y - 1));
-			dig(new Tile(gameObject.transform.position.x + 1, gameObject.transform.position.y));
-			dig(new Tile(gameObject.transform.position.x - 1, gameObject.transform.position.y));
-		}
-		if (item.type == "gourde")
-		{
-			hitPoints += 2;
-		}
-		if (item.type == "jetpack")
-		{
-			if (Input.GetMouseButtonUp(0))
+			if (tile.transform.position.x == transform.position.x && tile.transform.position.y == transform.position.y)
 			{
-				bool hasMoved = false;
-				while (!hasMoved)
-				{
-					// On recupere la position choisie
-					gameObject.transform.Translate(Input.mousePosition);
-					if (Input.GetMouseButtonUp(0)) hasMoved = true;
-				}
+				return tile.GetComponent<Tile>();
 			}
 		}
+		return null;
 	}
-	*/
 }
