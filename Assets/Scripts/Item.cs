@@ -45,13 +45,16 @@ public class Item : MonoBehaviour
 		{
 			case ((int)ItemType.ACCELERATEUR):
 				playerInfo.actionPoints += 2;
+                print("Qu'est ce que ?! C'est l'accélérateur de temps ! Cela va me permettre de prendre un peu d'avance sur la tornade (+2 pts d'action)");
 				break;
 			case ((int)ItemType.COKTAIL):
 				playerInfo.actionPoints += 2;
 				playerInfo.ChangeLife(2);
-				break;
+                print("Quelqu'un a fait tombé sa flasque, ça va me requinquer un peu ! (+2 pts de vie / +2 pts d'action)");
+                break;
 			case ((int)ItemType.GOURDE):
 				playerInfo.ChangeLife(2);
+                print("Oh une source ! Je peux me désaltérer (+2 pts de vie)");
 				break;
 		}
 			
