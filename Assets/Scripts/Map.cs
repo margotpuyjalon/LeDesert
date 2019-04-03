@@ -26,7 +26,7 @@ public class Map : MonoBehaviour
 
     public GameObject Tile_tech, Tile_source, Tile_start, Tile_end, Tile_tunnel, Tile_storm;
 
-    private Tile[,] map; 
+    private Tile[,] map;
     private Tile[] mendatoryTiles;
     private int difficulty = 0;
     private int sandBlocksLeft = 40;
@@ -55,7 +55,7 @@ public class Map : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        NextTurn();
     }
 
     // Crée une nouvelle matrice de tuiles
@@ -136,17 +136,45 @@ public class Map : MonoBehaviour
 
     void NextTurn()
     {
-        print(deck.PickNextCard());
-        // TODO déplacement de la tornade
-        // A remplacer par l'accès direct au vecteur de mvt ???
-        switch (deck.PickNextCard())
+        //print(deck.PickNextCard());
+
+        GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");
+        switch (5) //deck.PickNextCard()
         {
             case (int)DeckManager.CardsType.DifficultyUp:
                 ChangeDifficulty();
                 break;
 
             case (int)DeckManager.CardsType.MoveOneToBot:
+                for (int i = 0; i < 3; i++) // on ne check pas pour i = 4 puisque la tempete ne peut pas bouger dans ce cas
+                {
+                    for (int j = 0; j < 5; j++)
+                    {
+                        Tile t = map[i, j];
+                        if (t.type == (int)Type.STORM) // On inverse les deux tuiles
+                        {
+                            // dans la matrice
+                            Tile temp = map[i + 1, j];
+                            map[i + 1, j] = t; 
+                            map[i, j] = temp;
 
+                            // dans le visuel
+                            GameObject objStorm = GameObject.Find("Tile_storm");
+                            foreach (GameObject go in tiles)
+                            {
+                                if (go.transform.position.x == objStorm.transform.position.x - 1 && go.transform.position.y == objStorm.transform.position.y)
+                                {
+                                    go.transform.position = new Vector3(-1.5f + i, 2.5f - j, 1);
+                                    break;
+                                }
+                            }
+                            
+
+                            objStorm.transform.position = new Vector3(-1.5f + (i + 1), 2.5f - (j + 1), 1); 
+                        }
+
+                    }
+                }
                 break;
             case (int)DeckManager.CardsType.MoveOneToTop:
 
@@ -185,6 +213,7 @@ public class Map : MonoBehaviour
                 break;
 
             case (int)DeckManager.CardsType.HeatWave:
+                //PlayerController.changeLife(-1);
                 break;
             default:
                 break;
@@ -194,6 +223,7 @@ public class Map : MonoBehaviour
     void ChangeDifficulty()
     {
         difficulty++;
+        print("Arg... La chaleur augmente, encore " + (4 - difficulty) + " fois et je vais y passer !");
         if (difficulty == 4)
         {
             EndGame();
