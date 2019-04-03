@@ -73,6 +73,8 @@ public class PlayerController : MonoBehaviour
 				}
 				
 			}
+			Map m = new Map();
+			m.AffichagePiece();
 		}
 	}
 
