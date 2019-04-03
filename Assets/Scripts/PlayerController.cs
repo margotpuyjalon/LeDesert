@@ -6,8 +6,7 @@ public class PlayerController : MonoBehaviour
 {
 	public int hitPoints = 4;
 	public int actionPoints = 4;
-	public List<Item> items = new List<Item>();
-	public GameObject item;
+	//public Item item;
 
     // Start is called before the first frame update
     void Start()
@@ -58,27 +57,33 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
-	// Discover tile
+	// Discover tile 
 	public void Discover()
 	{
 		if (actionPoints != 0)
 		{
 			if (GetStandingTile().transform.position.x == transform.position.x && GetStandingTile().transform.position.y == transform.position.y)
 			{
-				items.Add(GetStandingTile().GetComponent<Tile>().GetItem());
-				actionPoints--;
+				Tile standingTile = GetStandingTile().GetComponent<Tile>();
+				
+				if (!standingTile.isDiscovered)
+				{
+					UseItem(standingTile.GetItem());
+					actionPoints--;
+				}
+				
 			}
 		}
 	}
 
-	
 	// Use an item
-	public void UseItem(int num)
+	public void UseItem(Item item)
 	{
-		items[num].UseItem(this.gameObject, this);
+		item.UseItem(this.gameObject, this);
 		// IL FAUT L'ENLEVER DE LA LISTE
 	}
 
+	// Get the tile where the player is on
 	private Tile GetStandingTile()
 	{
 		GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile"); // get all inPlayTiles

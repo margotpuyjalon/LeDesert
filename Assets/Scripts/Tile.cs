@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
@@ -33,6 +32,8 @@ public class Tile : MonoBehaviour
 		isDiscovered = true;
 		item = new Item();
 		item = item.GenerateItem(type);
+		gameObject.transform.Find("hidden").gameObject.SetActive(false);
+		print(item.type);
 		return item;
 	}
 }
