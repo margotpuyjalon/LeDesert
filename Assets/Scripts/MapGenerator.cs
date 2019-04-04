@@ -21,19 +21,7 @@ public enum Type
     VP4
 }
 
-public class EvaluatedMap
-{
-    public Type[,] TypesMap { get; set; }
-    public int Eval { get; set; }
-
-    public EvaluatedMap(Type[,] t, int e)
-    {
-        TypesMap = t;
-        Eval = e;
-    }
-}
-
-public class MapGeneration
+public class MapGenerator : MonoBehaviour
 {
     private const int NB_MAP = 100;
 
@@ -54,11 +42,11 @@ public class MapGeneration
                         },
                         {
                             Type.HP1, Type.VP1,
-                            Type.TECH,
-                            Type.HP2, Type.VP2
+                            Type.HP2, Type.VP2,
+                            Type.STORM
                         },
                         {
-                            Type.STORM, Type.TECH, Type.TECH, Type.TECH, Type.TECH
+                            Type.TECH, Type.TECH, Type.TECH, Type.TECH, Type.TECH
                         },
                         {
                             Type.TECH, Type.TECH, Type.TECH, Type.TECH, Type.TECH
@@ -66,7 +54,7 @@ public class MapGeneration
                         {
                             Type.TECH, Type.TECH, Type.TECH, Type.TECH, Type.TECH
                         }
-                    }, 100));
+                    }));
         }
     }
 
@@ -90,70 +78,8 @@ public class MapGeneration
         }
     }
 
-    // Evaluate a map
-    void EvaluateMap(EvaluatedMap m, int x, int y)
-    {
-        // Initialize clue positions to avoid conflics with true positions
-        int hp1 = -1, vp1 = -1,
-            hp2 = -2, vp2 = -2,
-            hp3 = -3, vp3 = -3,
-            hp4 = -4, vp4 = -4;
-
-        // Run through all tiles
-        for (int i = 0; i < x; i++)
-        {
-            for (int j = 0; j < y; j++)
-            {
-                Type current = m.TypesMap[j, i];
-                // Check if the storm is on a border
-                if ((i == 0
-                    || i == x - 1
-                    || j == 0 
-                    || j == y-1)
-                    && current == Type.STORM)
-                {
-                    m.Eval -= 10;
-                }
-
-                // Get clue location for ship's pieces
-                if (current == Type.HP1) hp1 = i;
-                if (current == Type.VP1) vp1 = j;
-                if (current == Type.HP2) hp2 = i;
-                if (current == Type.VP2) vp2 = j;
-                if (current == Type.HP3) hp3 = i;
-                if (current == Type.VP3) vp3 = j;
-                if (current == Type.HP4) hp4 = i;
-                if (current == Type.VP4) vp4 = j;
-            }
-        }
-
-        // Check if some ship's pieces are on the same tile
-        Vector2[] p = new Vector2[]
-        {
-            new Vector2( vp1, hp1 ),
-            new Vector2( vp2, hp2 ),
-            new Vector2( vp3, hp3 ),
-            new Vector2( vp4, hp4 )
-        };
-        if (ContainsDuplicates(p)) m.Eval -= 20;
-        
-    }
-
-    // Check duplicates in an array of Vectors
-    private bool ContainsDuplicates(Vector2[] a)
-    {
-        for (int i = 0; i < a.Length; i++)
-        {
-            for (int j = i + 1; j < a.Length; j++)
-            {
-                if (a[i] == a[j]) return true;
-            }
-        }
-        return false;
-    }
-
     // EvaluatedMap comparer
-    private static int EvMapComparer (EvaluatedMap x, EvaluatedMap y)
+    private static int MapComparer (EvaluatedMap x, EvaluatedMap y)
     {
         int comparison = 0;
         // x greater
@@ -170,6 +96,8 @@ public class MapGeneration
     public Type[,] GetMap(int x, int y)
     {
         List<EvaluatedMap> mapList = new List<EvaluatedMap>();
+        EvalutaionPlayer player = new EvalutaionPlayer();
+        MapEvaluator evaluator = new MapEvaluator();
         System.Random rnd = new System.Random();
 
         CreateNewMaps(NB_MAP, mapList);
@@ -177,14 +105,15 @@ public class MapGeneration
         foreach (EvaluatedMap m in mapList)
         {
             ShuffleTiles(m.TypesMap, rnd);
-            EvaluateMap(m, x, y);
+            evaluator.EvaluateMap(m, x, y); // Give a mark according to piles positions
+            player.TestMap(m, 10); // Give a mark according to number of turns before success or fail
         }
 
-        mapList.Sort(EvMapComparer);
+        mapList.Sort(MapComparer);
 
         foreach(EvaluatedMap m in mapList)
         {
-            Display(m, 5, 5);
+            Display(m, x, y);
         }
 
         return mapList[0].TypesMap;
@@ -202,6 +131,6 @@ public class MapGeneration
             }
             msg += "\n";
         }
-        Debug.Log(msg);
+        print(msg); // REMOVE MONOBEHAVIOUR
     }
 }
