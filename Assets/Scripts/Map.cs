@@ -29,7 +29,10 @@ public class Map : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (sandBlocksLeft == 0 || GameObject.Find("player").GetComponent<PlayerController>().hitPoints == 0 || (difficulty > 15))
+        {
+            EndGame(false);
+        }
     }
 
     // Display the map
@@ -149,10 +152,12 @@ public class Map : MonoBehaviour
 				{
 					
 					go.transform.Translate(new Vector3(-x, -y, 0));
-					go.GetComponent<Tile>().AddSandblock();
 					objStorm.transform.Translate(new Vector3(x, y, 0));
 					if (player.transform.position.x == objStorm.transform.position.x && player.transform.position.y == objStorm.transform.position.y) player.transform.Translate(new Vector3(-x, -y, 0));
-					break;
+
+                    go.GetComponent<Tile>().AddSandblock();
+                    sandBlocksLeft--;
+                    break;
 				}
 			}
 		}
@@ -163,15 +168,18 @@ public class Map : MonoBehaviour
     {
         difficulty++;
         print("Wow... Le vent devient encore plus violent, encore " + (16 - difficulty) + " fois et je vais y passer !");
-        if (difficulty > 15)
-        {
-            EndGame();
-        }
     }
 
-    void EndGame()
+    void EndGame(bool win)
     {
-        print("Fin de la partie ! Vous avez perdu.");
+        if (win)
+        {
+            print("Fin de la partie ! Vous avez gagné.");
+        }
+        else
+        {
+            print("Fin de la partie ! Vous avez perdu.");
+        }
     }
 
 	public void AffichagePiece()
