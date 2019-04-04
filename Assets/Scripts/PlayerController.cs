@@ -76,6 +76,7 @@ public class PlayerController : MonoBehaviour
 				if (GetStandingTile().GetComponent<Tile>().nbSandBlocks != 0)
 				{
 					GetStandingTile().GetComponent<Tile>().RemoveSandblock();
+					GameObject.Find("Tilemap").GetComponent<Map>().sandBlocksLeft++;
 					actionPoints--;
 				}
 				else print("Cannot dig here !");
@@ -92,7 +93,7 @@ public class PlayerController : MonoBehaviour
 			{
 				Tile standingTile = GetStandingTile().GetComponent<Tile>();
 				
-				if (!standingTile.isDiscovered)
+				if (!standingTile.isDiscovered && standingTile.nbSandBlocks==0)
 				{
 					UseItem(standingTile.GetItem());
 					actionPoints--;

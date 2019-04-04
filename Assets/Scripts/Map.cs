@@ -12,7 +12,7 @@ public class Map : MonoBehaviour
     private Type[,] typesMap;
 
     private int difficulty = 1;
-    private int sandBlocksLeft = 40;
+    public int sandBlocksLeft = 40;
 
     public DeckManager deck;
 
@@ -24,7 +24,9 @@ public class Map : MonoBehaviour
         typeMapGenerator = new MapGenerator();
         typesMap = typeMapGenerator.GetMap(5,5);
 		DisplayMap(5,5);
-    }
+		GameObject.Find("player").transform.position = GameObject.Find("Tile_start(Clone)").transform.position;
+		GameObject.Find("player").transform.Translate(0,0,-2);
+	}
 
     // Update is called once per frame
     void Update()
@@ -150,7 +152,6 @@ public class Map : MonoBehaviour
 			{
 				if (go.transform.position.x == objStorm.transform.position.x + x && go.transform.position.y == objStorm.transform.position.y + y)
 				{
-					
 					go.transform.Translate(new Vector3(-x, -y, 0));
 					objStorm.transform.Translate(new Vector3(x, y, 0));
 					if (player.transform.position.x == objStorm.transform.position.x && player.transform.position.y == objStorm.transform.position.y) player.transform.Translate(new Vector3(-x, -y, 0));
@@ -255,5 +256,4 @@ public class Map : MonoBehaviour
 		//    }
 		//}
 	}
-
 }
