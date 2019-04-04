@@ -22,16 +22,41 @@ public class PlayerController : MonoBehaviour
 	// Translate character sprite
 	private void Move()
 	{
+		GameObject objStorm = GameObject.Find("Tile_storm(Clone)");
 		if (GetStandingTile().nbSandBlocks < 2 && actionPoints != 0)  // si tuile sur laquelle on est n'est pas ensablee
 		{
 			if (Input.GetKeyUp("up") && gameObject.transform.position.y < 2.5)
-			{ gameObject.transform.Translate(0, 1, 0); actionPoints--; }      // Up
+			{
+				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 1)))
+				{
+					gameObject.transform.Translate(0, 1, 0);
+					actionPoints--;
+				}
+			}		 // Up
 			if (Input.GetKeyUp("down") && gameObject.transform.position.y > -1.5)
-			{ gameObject.transform.Translate(0, -1, 0); actionPoints--; }      // Down
+			{
+				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x, gameObject.transform.position.y - 1)))
+				{
+					gameObject.transform.Translate(0, -1, 0);
+					actionPoints--;
+				}
+			}	 // Down
 			if (Input.GetKeyUp("right") && gameObject.transform.position.x < 2.5)
-			{ gameObject.transform.Translate(1, 0, 0); actionPoints--; }       // Right
+			{
+				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y)))
+				{
+					gameObject.transform.Translate(1, 0, 0);
+					actionPoints--;
+				}
+			}	 // Right
 			if (Input.GetKeyUp("left") && gameObject.transform.position.x > -1.5)
-			{ gameObject.transform.Translate(-1, 0, 0); actionPoints--; }     // Left
+			{
+				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y)))
+				{
+					gameObject.transform.Translate(-1, 0, 0);
+					actionPoints--;
+				}
+			}	 // Left
 		}
 	}
 
