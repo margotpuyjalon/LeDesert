@@ -23,7 +23,7 @@ public class Map : MonoBehaviour
 
         typeMapGenerator = new MapGenerator();
         typesMap = typeMapGenerator.GetMap(5,5);
-        DisplayMap(5,5);
+		DisplayMap(5,5);
     }
 
     // Update is called once per frame
@@ -40,7 +40,7 @@ public class Map : MonoBehaviour
             for (int j = 0; j < y; j++)
             {
                 GameObject tileType = null;
-                switch (typesMap[i,j])
+                switch ((Type)typesMap[i,j])
                 {
                     case Type.SOURCE:
                         tileType = Tile_source;
@@ -66,7 +66,7 @@ public class Map : MonoBehaviour
                 }
                 GameObject tile = Instantiate(tileType);
 				tile.tag = "InPlayTile";
-				tile.transform.position = new Vector3(-1.5f + i, 2.5f - j, 1);
+				tile.transform.position = new Vector3(-1.5f + i, 2.5f - j, 0);
             }
         }
     }
@@ -149,6 +149,7 @@ public class Map : MonoBehaviour
 				{
 					
 					go.transform.Translate(new Vector3(-x, -y, 0));
+					go.GetComponent<Tile>().AddSandblock();
 					objStorm.transform.Translate(new Vector3(x, y, 0));
 					if (player.transform.position.x == objStorm.transform.position.x && player.transform.position.y == objStorm.transform.position.y) player.transform.Translate(new Vector3(-x, -y, 0));
 					break;

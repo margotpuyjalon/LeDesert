@@ -48,11 +48,12 @@ public class PlayerController : MonoBehaviour
 		{
 			if (GetStandingTile().transform.position.x == transform.position.x && GetStandingTile().transform.position.y == transform.position.y)
 			{
-				if (GetStandingTile().GetComponent<Tile>().nbSandBlocks !=0)
+				if (GetStandingTile().GetComponent<Tile>().nbSandBlocks != 0)
 				{
-					GetStandingTile().GetComponent<Tile>().nbSandBlocks--;
+					GetStandingTile().GetComponent<Tile>().RemoveSandblock();
 					actionPoints--;
 				}
+				else print("Cannot dig here !");
 			}
 		}
 	}

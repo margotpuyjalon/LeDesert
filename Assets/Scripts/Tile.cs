@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
@@ -8,6 +9,7 @@ public class Tile : MonoBehaviour
     public bool isDiscovered;
     public int nbSandBlocks;
     public Item item;
+	public Text m_Text;
 
 	public Tile(int t)
     {
@@ -24,6 +26,7 @@ public class Tile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+		
 	}
 
 	public Item GetItem()
@@ -35,5 +38,17 @@ public class Tile : MonoBehaviour
 		gameObject.transform.Find("hidden").gameObject.SetActive(false);
 		print(item.type);
 		return item;
+	}
+
+	public void RemoveSandblock()
+	{
+		nbSandBlocks--;
+		m_Text.text = "" + nbSandBlocks;
+	}
+
+	public void AddSandblock()
+	{
+		nbSandBlocks++;
+		m_Text.text = "" + nbSandBlocks;
 	}
 }
