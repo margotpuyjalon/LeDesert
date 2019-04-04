@@ -908,6 +908,8 @@ MonoBehaviour:
   nbSandBlocks: 0
   item: {fileID: 0}
   m_Text: {fileID: 1920821865}
+  oneSandSprite: {fileID: 21300000, guid: b9bf32e5f8bd23e40a671eef3c6f5a6a, type: 3}
+  severalSandSprite: {fileID: 21300000, guid: fe1221309f0d1e04c88ed730fcb94d0a, type: 3}
 --- !u!1 &397489669
 GameObject:
   m_ObjectHideFlags: 0
@@ -1051,6 +1053,8 @@ MonoBehaviour:
   nbSandBlocks: 0
   item: {fileID: 0}
   m_Text: {fileID: 1508848080}
+  oneSandSprite: {fileID: 21300000, guid: b9bf32e5f8bd23e40a671eef3c6f5a6a, type: 3}
+  severalSandSprite: {fileID: 21300000, guid: fe1221309f0d1e04c88ed730fcb94d0a, type: 3}
 --- !u!1 &470476514
 GameObject:
   m_ObjectHideFlags: 0
@@ -1227,6 +1231,8 @@ MonoBehaviour:
   nbSandBlocks: 0
   item: {fileID: 0}
   m_Text: {fileID: 0}
+  oneSandSprite: {fileID: 21300000, guid: b9bf32e5f8bd23e40a671eef3c6f5a6a, type: 3}
+  severalSandSprite: {fileID: 21300000, guid: fe1221309f0d1e04c88ed730fcb94d0a, type: 3}
 --- !u!1 &647192682
 GameObject:
   m_ObjectHideFlags: 0
@@ -1499,6 +1505,8 @@ MonoBehaviour:
   nbSandBlocks: 0
   item: {fileID: 0}
   m_Text: {fileID: 1612017323}
+  oneSandSprite: {fileID: 21300000, guid: b9bf32e5f8bd23e40a671eef3c6f5a6a, type: 3}
+  severalSandSprite: {fileID: 21300000, guid: fe1221309f0d1e04c88ed730fcb94d0a, type: 3}
 --- !u!1 &849708772
 GameObject:
   m_ObjectHideFlags: 0
@@ -2129,6 +2137,8 @@ MonoBehaviour:
   nbSandBlocks: 0
   item: {fileID: 0}
   m_Text: {fileID: 1165374723}
+  oneSandSprite: {fileID: 21300000, guid: b9bf32e5f8bd23e40a671eef3c6f5a6a, type: 3}
+  severalSandSprite: {fileID: 21300000, guid: fe1221309f0d1e04c88ed730fcb94d0a, type: 3}
 --- !u!1 &1508848078
 GameObject:
   m_ObjectHideFlags: 0
@@ -3220,3 +3230,5 @@ MonoBehaviour:
   nbSandBlocks: 0
   item: {fileID: 0}
   m_Text: {fileID: 470476516}
+  oneSandSprite: {fileID: 21300000, guid: b9bf32e5f8bd23e40a671eef3c6f5a6a, type: 3}
+  severalSandSprite: {fileID: 21300000, guid: fe1221309f0d1e04c88ed730fcb94d0a, type: 3}
