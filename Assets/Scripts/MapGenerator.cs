@@ -21,7 +21,7 @@ public enum Type
     VP4
 }
 
-public class MapGenerator : MonoBehaviour
+public class MapGenerator
 {
     private const int NB_MAP = 100;
 
@@ -131,6 +131,6 @@ public class MapGenerator : MonoBehaviour
             }
             msg += "\n";
         }
-        print(msg); // REMOVE MONOBEHAVIOUR
+        Debug.Log(msg);
     }
 }
