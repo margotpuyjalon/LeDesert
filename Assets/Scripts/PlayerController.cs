@@ -99,7 +99,6 @@ public class PlayerController : MonoBehaviour
 					GameObject.Find("Tilemap").GetComponent<Map>().AffichagePiece();
 					actionPoints--;
 				}
-				
 			}
 		}
 	}
