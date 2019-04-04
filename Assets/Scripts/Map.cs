@@ -6,7 +6,8 @@ public class Map : MonoBehaviour
 {
     const int NB_TILE = 25;
 
-    public GameObject Tile_tech, Tile_source, Tile_start, Tile_end, Tile_tunnel, Tile_storm;
+    public GameObject Tile_tech, Tile_source, Tile_start, Tile_end, Tile_tunnel, Tile_storm,
+		Tile_HP1, Tile_HP2, Tile_HP3, Tile_HP4, Tile_VP1, Tile_VP2, Tile_VP3, Tile_VP4;
 
     private MapGenerator typeMapGenerator;
     private Type[,] typesMap;
@@ -28,7 +29,7 @@ public class Map : MonoBehaviour
 		GameObject.Find("player").transform.Translate(0,0,-2);
 	}
 
-    // Update is called once per frame
+    // Update is called once per fram
     void Update()
     {
         if (sandBlocksLeft == 0 || GameObject.Find("player").GetComponent<PlayerController>().hitPoints == 0 || (difficulty > 15))
@@ -65,7 +66,31 @@ public class Map : MonoBehaviour
                     case Type.STORM:
                         tileType = Tile_storm;
                         break;
-                    default:
+					case Type.HP1:
+						tileType = Tile_HP1;
+						break;
+					case Type.HP2:
+						tileType = Tile_HP2;
+						break;
+					case Type.HP3:
+						tileType = Tile_HP3;
+						break;
+					case Type.HP4:
+						tileType = Tile_HP4;
+						break;
+					case Type.VP1:
+						tileType = Tile_VP1;
+						break;
+					case Type.VP2:
+						tileType = Tile_VP2;
+						break;
+					case Type.VP3:
+						tileType = Tile_VP3;
+						break;
+					case Type.VP4:
+						tileType = Tile_VP4;
+						break;
+					default:
                         tileType = Tile_tech;
                         break;
                 }
@@ -155,14 +180,13 @@ public class Map : MonoBehaviour
 					go.transform.Translate(new Vector3(-x, -y, 0));
 					objStorm.transform.Translate(new Vector3(x, y, 0));
 					if (player.transform.position.x == objStorm.transform.position.x && player.transform.position.y == objStorm.transform.position.y) player.transform.Translate(new Vector3(-x, -y, 0));
-
-                    go.GetComponent<Tile>().AddSandblock();
+				    go.GetComponent<Tile>().AddSandblock();
                     sandBlocksLeft--;
-                    break;
+					AffichagePiece();
+					break;
 				}
 			}
 		}
-		AffichagePiece();
 	}
 
     void ChangeDifficulty()
@@ -203,44 +227,50 @@ public class Map : MonoBehaviour
 				switch (tile.GetComponent<Tile>().type)
 				{
 					case (int)Type.HP1:
-						HP1 = tile.transform.position.x;
+						HP1 = tile.transform.position.y;
 						break;
 					case (int)Type.HP2:
-						HP2 = tile.transform.position.x;
+						HP2 = tile.transform.position.y;
 						break;
 					case (int)Type.HP3:
-						HP3 = tile.transform.position.x;
+						HP3 = tile.transform.position.y;
 						break;
 					case (int)Type.HP4:
-						HP4 = tile.transform.position.x;
+						HP4 = tile.transform.position.y;
 						break;
 					case (int)Type.VP1:
-						VP1 = tile.transform.position.y;
+						VP1 = tile.transform.position.x;
 						break;
 					case (int)Type.VP2:
-						VP2 = tile.transform.position.y;
+						VP2 = tile.transform.position.x;
 						break;
 					case (int)Type.VP3:
-						VP3 = tile.transform.position.y;
+						VP3 = tile.transform.position.x;
 						break;
 					case (int)Type.VP4:
-						VP4 = tile.transform.position.y;
+						VP4 = tile.transform.position.x;
 						break;
 				}
 			}
 		}
 
+		print("ca passe !");
+		Debug.Log(HP1+""+VP1 + "" + HP2 + "" + VP2 + "" + HP3 + "" + VP3 + "" + HP4 + "" + VP4);
 		if (HP1 > -2 && VP1 > -2)
-		{ //LA PIECE EST EN (HP1,VP1)
+		{
+			GameObject.Find("bluePiece").transform.position = new Vector3(VP1, HP1, -1);
 		}
 		if (HP2 > -2 && VP2 > -2)
-		{ //LA PIECE EST EN (HP2,VP2)
+		{
+			GameObject.Find("greenPiece").transform.position = new Vector3(VP2, HP2, -1);
 		}
 		if (HP3 > -2 && VP3 > -2)
-		{ //LA PIECE EST EN (HP3,VP3)
+		{
+			GameObject.Find("redPiece").transform.position = new Vector3(VP3, HP3, -1);
 		}
 		if (HP4 > -2 && VP4 > -2)
-		{ //LA PIECE EST EN (HP4,VP4)
+		{
+			GameObject.Find("purplePiece").transform.position = new Vector3(VP4, HP4, -1);
 		}
 
 		// FOR DEBUG

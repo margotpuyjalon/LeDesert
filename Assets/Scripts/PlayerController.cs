@@ -96,12 +96,11 @@ public class PlayerController : MonoBehaviour
 				if (!standingTile.isDiscovered && standingTile.nbSandBlocks==0)
 				{
 					UseItem(standingTile.GetItem());
+					GameObject.Find("Tilemap").GetComponent<Map>().AffichagePiece();
 					actionPoints--;
 				}
 				
 			}
-			Map m = new Map();
-			m.AffichagePiece();
 		}
 	}
 

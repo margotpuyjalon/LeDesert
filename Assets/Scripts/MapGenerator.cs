@@ -43,10 +43,12 @@ public class MapGenerator
                         {
                             Type.HP1, Type.VP1,
                             Type.HP2, Type.VP2,
-                            Type.STORM
+                            Type.HP3
                         },
                         {
-                            Type.TECH, Type.TECH, Type.TECH, Type.TECH, Type.TECH
+							Type.VP3,
+							Type.HP4, Type.VP4,
+							Type.STORM, Type.TECH
                         },
                         {
                             Type.TECH, Type.TECH, Type.TECH, Type.TECH, Type.TECH
