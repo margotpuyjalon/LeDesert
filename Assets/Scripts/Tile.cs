@@ -11,6 +11,9 @@ public class Tile : MonoBehaviour
     public Item item;
 	public Text m_Text;
 
+    public Sprite oneSandSprite;
+    public Sprite severalSandSprite;
+
 	public Tile(int t)
     {
         type = t;
@@ -26,7 +29,18 @@ public class Tile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		
+        switch (nbSandBlocks)
+        {
+            case 0:
+                GetComponent<SpriteRenderer>().sprite = GetComponent<SpriteRenderer>().sprite;
+                break;
+            case 1:
+                GetComponent<SpriteRenderer>().sprite = oneSandSprite;
+                break;
+            default:
+                GetComponent<SpriteRenderer>().sprite = severalSandSprite;
+                break;
+        }
 	}
 
 	public Item GetItem()
