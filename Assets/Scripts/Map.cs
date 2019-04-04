@@ -8,8 +8,7 @@ public class Map : MonoBehaviour
 
     public GameObject Tile_tech, Tile_source, Tile_start, Tile_end, Tile_tunnel, Tile_storm;
 
-    private MapGeneration typeMapGenerator;
-    private Tile[,] map; 
+    private MapGenerator typeMapGenerator;
     private Type[,] typesMap;
 
     private int difficulty = 1;
@@ -22,37 +21,15 @@ public class Map : MonoBehaviour
     {
         deck = new DeckManager();
 
-        typeMapGenerator = new MapGeneration();
+        typeMapGenerator = new MapGenerator();
         typesMap = typeMapGenerator.GetMap(5,5);
-        StartGame(5,5);
+        DisplayMap(5,5);
     }
 
     // Update is called once per frame
     void Update()
     {
         
-    }
-
-    // Crée une nouvelle matrice de tuiles
-    // Place le joueur sur la tuile de départ
-    // Affiche les éléments du jeu
-    void StartGame(int x, int y)
-    {
-        GenerateMatrix(x, y);
-        DisplayMap(x, y);
-    }
-
-    // Fill map with tiles
-    void GenerateMatrix(int x, int y)
-    {
-        map = new Tile[x, y];
-        for(int i=0; i<x; i++)
-        {
-            for(int j=0; j<y; j++)
-            {
-                map[i, j] = new Tile((int)typesMap[i,j]);
-            }
-        }
     }
 
     // Display the map
@@ -63,7 +40,7 @@ public class Map : MonoBehaviour
             for (int j = 0; j < y; j++)
             {
                 GameObject tileType = null;
-                switch ((Type)map[i,j].type)
+                switch (typesMap[i,j])
                 {
                     case Type.SOURCE:
                         tileType = Tile_source;
