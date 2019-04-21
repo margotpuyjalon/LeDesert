@@ -11,9 +11,6 @@ public class Tile : MonoBehaviour
     public Item item;
 	public Text m_Text;
 
-    public Sprite oneSandSprite;
-    public Sprite severalSandSprite;
-
 	public Tile(int t)
     {
         type = t;
@@ -24,23 +21,13 @@ public class Tile : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
-    }
+		gameObject.transform.Find("PeuEnsable").gameObject.SetActive(false);
+				gameObject.transform.Find("TresEnsable").gameObject.SetActive(false);
+	}
 
     // Update is called once per frame
     void Update()
     {
-        switch (nbSandBlocks)
-        {
-            case 0:
-                GetComponent<SpriteRenderer>().sprite = GetComponent<SpriteRenderer>().sprite;
-                break;
-            case 1:
-                GetComponent<SpriteRenderer>().sprite = oneSandSprite;
-                break;
-            default:
-                GetComponent<SpriteRenderer>().sprite = severalSandSprite;
-                break;
-        }
 	}
 
 	public Item GetItem()
@@ -58,11 +45,31 @@ public class Tile : MonoBehaviour
 	{
 		nbSandBlocks--;
 		m_Text.text = "" + nbSandBlocks;
+		ChooseSkin();
 	}
 
 	public void AddSandblock()
 	{
 		nbSandBlocks++;
 		m_Text.text = "" + nbSandBlocks;
+		ChooseSkin();
+	}
+
+	private void ChooseSkin()
+	{
+		switch (nbSandBlocks)
+		{
+			case 0:
+				gameObject.transform.Find("PeuEnsable").gameObject.SetActive(false);
+				gameObject.transform.Find("TresEnsable").gameObject.SetActive(false);
+				break;
+			case 1:
+				gameObject.transform.Find("PeuEnsable").gameObject.SetActive(true);
+				gameObject.transform.Find("TresEnsable").gameObject.SetActive(false);
+				break;
+			default:
+				gameObject.transform.Find("TresEnsable").gameObject.SetActive(true);
+				break;
+		}
 	}
 }

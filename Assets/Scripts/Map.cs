@@ -17,6 +17,7 @@ public class Map : MonoBehaviour
 
     public DeckManager deck;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -182,11 +183,11 @@ public class Map : MonoBehaviour
 					if (player.transform.position.x == objStorm.transform.position.x && player.transform.position.y == objStorm.transform.position.y) player.transform.Translate(new Vector3(-x, -y, 0));
 				    go.GetComponent<Tile>().AddSandblock();
                     sandBlocksLeft--;
-					AffichagePiece();
 					break;
 				}
 			}
 		}
+		AffichagePiece();
 	}
 
     void ChangeDifficulty()
@@ -254,23 +255,25 @@ public class Map : MonoBehaviour
 			}
 		}
 
+		GameObject player = GameObject.Find("player");
+
 		print("ca passe !");
 		Debug.Log(HP1+""+VP1 + "" + HP2 + "" + VP2 + "" + HP3 + "" + VP3 + "" + HP4 + "" + VP4);
 		if (HP1 > -2 && VP1 > -2)
 		{
-			GameObject.Find("bluePiece").transform.position = new Vector3(VP1, HP1, -1);
+			if (!player.GetComponent<PlayerController>().revealedPiece1) GameObject.Find("bluePiece").transform.position = new Vector3(VP1, HP1, -3);
 		}
 		if (HP2 > -2 && VP2 > -2)
 		{
-			GameObject.Find("greenPiece").transform.position = new Vector3(VP2, HP2, -1);
+			if (!player.GetComponent<PlayerController>().revealedPiece2) GameObject.Find("greenPiece").transform.position = new Vector3(VP2, HP2, -3);
 		}
 		if (HP3 > -2 && VP3 > -2)
 		{
-			GameObject.Find("redPiece").transform.position = new Vector3(VP3, HP3, -1);
+			if(!player.GetComponent<PlayerController>().revealedPiece3) GameObject.Find("redPiece").transform.position = new Vector3(VP3, HP3, -3);
 		}
 		if (HP4 > -2 && VP4 > -2)
 		{
-			GameObject.Find("purplePiece").transform.position = new Vector3(VP4, HP4, -1);
+			if (!player.GetComponent<PlayerController>().revealedPiece4) GameObject.Find("purplePiece").transform.position = new Vector3(VP4, HP4, -3);
 		}
 
 		// FOR DEBUG

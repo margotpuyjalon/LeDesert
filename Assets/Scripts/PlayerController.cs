@@ -8,8 +8,13 @@ public class PlayerController : MonoBehaviour
 	public int actionPoints = 4;
 	//public Item item;
 
-    // Start is called before the first frame update
-    void Start()
+	public bool revealedPiece1 = false;
+	public bool revealedPiece2 = false;
+	public bool revealedPiece3 = false;
+	public bool revealedPiece4 = false;
+
+	// Start is called before the first frame update
+	void Start()
     {
 	}
 
@@ -27,34 +32,46 @@ public class PlayerController : MonoBehaviour
 		{
 			if (Input.GetKeyUp("up") && gameObject.transform.position.y < 2.5)
 			{
-				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 1)))
+				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 1))) //Il n'y a pas la tornade
 				{
-					gameObject.transform.Translate(0, 1, 0);
-					actionPoints--;
+					//if (GetNextTile(new Vector3(0, 1, 0)).nbSandBlocks < 2)
+					//{
+						gameObject.transform.Translate(0, 1, 0);
+						actionPoints--;
+					//}
 				}
 			}		 // Up
 			if (Input.GetKeyUp("down") && gameObject.transform.position.y > -1.5)
 			{
-				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x, gameObject.transform.position.y - 1)))
+				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x, gameObject.transform.position.y - 1))) //Il n'y a pas la tornade
 				{
-					gameObject.transform.Translate(0, -1, 0);
-					actionPoints--;
+					//if (GetNextTile(new Vector3(0, -1, 0)).nbSandBlocks < 2)
+					//{
+						gameObject.transform.Translate(0, -1, 0);
+						actionPoints--;
+					//}
 				}
 			}	 // Down
 			if (Input.GetKeyUp("right") && gameObject.transform.position.x < 2.5)
 			{
-				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y)))
+				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y))) //Il n'y a pas la tornade
 				{
-					gameObject.transform.Translate(1, 0, 0);
-					actionPoints--;
+					//if (GetNextTile(new Vector3(1, 0, 0)).nbSandBlocks < 2)
+					//{
+						gameObject.transform.Translate(1, 0, 0);
+						actionPoints--;
+					//}
 				}
 			}	 // Right
 			if (Input.GetKeyUp("left") && gameObject.transform.position.x > -1.5)
 			{
-				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y)))
+				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y))) //Il n'y a pas la tornade
 				{
-					gameObject.transform.Translate(-1, 0, 0);
-					actionPoints--;
+					//if (GetNextTile(new Vector3(-1, 0, 0)).nbSandBlocks < 2)
+					//{
+						gameObject.transform.Translate(-1, 0, 0);
+						actionPoints--;
+					//}
 				}
 			}	 // Left
 		}
@@ -122,5 +139,52 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 		return null;
+	}
+
+	// Get the tile where the player want to move
+	private Tile GetNextTile(Vector3 move)
+	{
+		GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile"); // get all inPlayTiles
+		foreach (GameObject tile in tiles)
+		{
+			// Check the next tile
+			if ((tile.transform.position.x - move.x) == transform.position.x && (tile.transform.position.y - move.y) == transform.position.y)
+			{
+				return tile.GetComponent<Tile>();
+			}
+		}
+		return null;
+	}
+
+	public void GetPiece()
+	{
+		List<GameObject> pieces = new List<GameObject>();
+		pieces.Add(GameObject.Find("bluePiece"));
+		pieces.Add(GameObject.Find("greenPiece"));
+		pieces.Add(GameObject.Find("redPiece"));
+		pieces.Add(GameObject.Find("purplePiece"));
+
+		if (GetStandingTile().nbSandBlocks == 0 && actionPoints != 0)
+		{
+			if (!GetStandingTile().isDiscovered)
+			{
+				foreach (GameObject piece in pieces)
+				{
+					// Check the piece to gather
+					if (piece.transform.position.x == transform.position.x && piece.transform.position.y == transform.position.y)
+					{
+						if (piece.name == "bluePiece") revealedPiece1 = true;
+						if (piece.name == "greenPiece") revealedPiece2 = true;
+						if (piece.name == "redPiece") revealedPiece3 = true;
+						if (piece.name == "purplePiece") revealedPiece4 = true;
+
+						piece.transform.Translate(1000, 0, 0);
+						actionPoints--;
+					}
+				}
+			}
+			else print("I have to discover the tile first !");
+		}
+		else print("Cannot grab the piece !");
 	}
 }
