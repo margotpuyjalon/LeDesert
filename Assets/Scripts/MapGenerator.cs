@@ -23,7 +23,8 @@ public enum Type
 
 public class MapGenerator
 {
-    private const int NB_MAP = 100;
+    private const int NB_MAP_TO_CREATE = 10;
+    private const int NB_TEST_PER_MAP = 3;
 
     // Create n basic map
     void CreateNewMaps(int n, List<EvaluatedMap> map)
@@ -32,7 +33,7 @@ public class MapGenerator
         {
             map.Add(
                 new EvaluatedMap(
-                    new Type[,]
+                    new Type[,] //TOFIX : POUVOIR SAISIR LA TAILLE DU TABLEAU DYNAMIQUEMENT
                     {
                         {
                             Type.SOURCE,
@@ -81,15 +82,16 @@ public class MapGenerator
     }
 
     // EvaluatedMap comparer
-    private static int MapComparer (EvaluatedMap x, EvaluatedMap y)
+    // The best map has got the lowest score
+    private static int MapComparator (EvaluatedMap x, EvaluatedMap y)
     {
         int comparison = 0;
         // x greater
         if (x.Eval > y.Eval)
-            comparison = -1;
+            comparison = 1;
         // y greater
         else if (y.Eval > x.Eval)
-            comparison = 1;
+            comparison = -1;
         return comparison;
     }
 
@@ -98,27 +100,23 @@ public class MapGenerator
     public Type[,] GetMap(int x, int y)
     {
         List<EvaluatedMap> mapList = new List<EvaluatedMap>();
-        EvalutaionPlayer player = new EvalutaionPlayer();
+        PlayerEvaluator player = new PlayerEvaluator(4);
         MapEvaluator evaluator = new MapEvaluator();
-        System.Random rnd = new System.Random();
+        System.Random rnd = new System.Random(5);
 
-        CreateNewMaps(NB_MAP, mapList);
+        CreateNewMaps(NB_MAP_TO_CREATE, mapList);
 
         foreach (EvaluatedMap m in mapList)
         {
-            ShuffleTiles(m.TypesMap, rnd);
+            ShuffleTiles(m.TypesMap, rnd);  // Mutate the map
             evaluator.EvaluateMap(m, x, y); // Give a mark according to piles positions
-            player.TestMap(m, 10); // Give a mark according to number of turns before success or fail
+            player.TestMap(m, x, y, NB_TEST_PER_MAP);    // Give a mark according to number of turns before success or fail
         }
 
-        mapList.Sort(MapComparer);
+        mapList.Sort(MapComparator);
 
-        foreach(EvaluatedMap m in mapList)
-        {
-            Display(m, x, y);
-        }
-
-        return mapList[0].TypesMap;
+        Display(mapList[0], x, y);
+        return mapList[0].TypesMap; // Return the best map
     }
 
     // FOR DEBUG
