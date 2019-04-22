@@ -86,10 +86,13 @@ public class MapGenerator
     private static int MapComparator (EvaluatedMap x, EvaluatedMap y)
     {
         int comparison = 0;
-        // x greater
+        // x Eval greater
         if (x.Eval > y.Eval)
             comparison = 1;
-        // y greater
+        // x Turns too low
+        else if (y.Eval > x.Eval && x.NbTurns < 4)
+            comparison = 1;
+        // good
         else if (y.Eval > x.Eval)
             comparison = -1;
         return comparison;
@@ -100,7 +103,7 @@ public class MapGenerator
     public Type[,] GetMap(int x, int y)
     {
         List<EvaluatedMap> mapList = new List<EvaluatedMap>();
-        PlayerEvaluator player = new PlayerEvaluator(4);
+        PlayerEvaluator player = new PlayerEvaluator(4, x, y);
         MapEvaluator evaluator = new MapEvaluator();
         System.Random rnd = new System.Random(5);
 
@@ -110,19 +113,18 @@ public class MapGenerator
         {
             ShuffleTiles(m.TypesMap, rnd);  // Mutate the map
             evaluator.EvaluateMap(m, x, y); // Give a mark according to piles positions
-            player.TestMap(m, x, y, NB_TEST_PER_MAP);    // Give a mark according to number of turns before success or fail
+            player.TestMap(m, NB_TEST_PER_MAP);    // Give a mark according to number of turns before success or fail
         }
 
         mapList.Sort(MapComparator);
-
-        Display(mapList[0], x, y);
+        for(int i=0; i<5; i++)Display(mapList[i], x, y);
         return mapList[0].TypesMap; // Return the best map
     }
 
     // FOR DEBUG
     void Display(EvaluatedMap m, int x, int y)
     {
-        string msg = "map e = " + m.Eval + "\n";
+        string msg = "map e = " + m.Eval + " et nbT = " + m.NbTurns + "\n";
         for (int i = 0; i < x; i++)
         {
             for (int j = 0; j < y; j++)

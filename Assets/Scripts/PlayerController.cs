@@ -166,7 +166,7 @@ public class PlayerController : MonoBehaviour
 
 		if (GetStandingTile().nbSandBlocks == 0 && actionPoints != 0)
 		{
-			if (!GetStandingTile().isDiscovered)
+			if (GetStandingTile().isDiscovered)
 			{
 				foreach (GameObject piece in pieces)
 				{
