@@ -29,11 +29,15 @@ public class MapEvaluator
     // Evaluate forbidden composition of map
     public void EvaluateForbiddenMap(EvaluatedMap map, int x, int y)
     {
+        bool firstTunnelFound = false;
+
         // Initialize positions to avoid conflics with true positions
         int hp1 = -1, vp1 = -1,
             hp2 = -2, vp2 = -2,
             hp3 = -3, vp3 = -3,
-            hp4 = -4, vp4 = -4;
+            hp4 = -4, vp4 = -4,
+            t1i = -5, t1j = -5,
+            t2i = -6, t2j = -6;
 
         // Run through all tiles
         for (int j = 0; j < y; j++)
@@ -48,18 +52,28 @@ public class MapEvaluator
                     || j == y - 1)
                     && current == Type.STORM)
                 {
-                    map.Eval += 10;
+                    map.Eval += 20;
                 }
 
                 // Get clue location for ship's pieces
                 if (current == Type.HP1) hp1 = i;
-                if (current == Type.VP1) vp1 = j;
-                if (current == Type.HP2) hp2 = i;
-                if (current == Type.VP2) vp2 = j;
-                if (current == Type.HP3) hp3 = i;
-                if (current == Type.VP3) vp3 = j;
-                if (current == Type.HP4) hp4 = i;
-                if (current == Type.VP4) vp4 = j;
+                else if (current == Type.VP1) vp1 = j;
+                else if (current == Type.HP2) hp2 = i;
+                else if (current == Type.VP2) vp2 = j;
+                else if (current == Type.HP3) hp3 = i;
+                else if (current == Type.VP3) vp3 = j;
+                else if (current == Type.HP4) hp4 = i;
+                else if (current == Type.VP4) vp4 = j;
+                // Get 2 fisrt tunnels locations
+                else if (current == Type.TUNNEL && !firstTunnelFound)
+                {
+                    t1i = i; t1j = j;
+                    firstTunnelFound = true;
+                }
+                else if (current == Type.TUNNEL)
+                {
+                    t2i = i; t2j = j;
+                }
             }
         }
 
@@ -71,7 +85,11 @@ public class MapEvaluator
             new Vector2( hp3, vp3 ),
             new Vector2( hp4, vp4 )
         };
-        if (ContainsDuplicates(p)) map.Eval += 20;
+        if (ContainsDuplicates(p)) map.Eval += 30;
+
+        // Check if 2 tunnels are too close
+        if (t1i == t2i && ((t1j - t2j) == 1) || (t2j - t1j) == 1) map.Eval += 10; // same column
+        if (t1j == t2j && ((t1i - t2i) == 1) || (t2i - t1i) == 1) map.Eval += 10; // same row
 
         // Debug.Log("Note map = " + map.Eval);
 

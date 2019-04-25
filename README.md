@@ -13,6 +13,7 @@ On génère aléatoirement (par mutation d'une carte originale) plusieurs cartes
 On pénalise les cartes avec des critères d'acceptation : 
  - La tornade ne doit pas commencer sur un côté
  - Deux pièces de puzzle ne sont pas sur la même tuile (= les indices de ces pièces ne pointent pas vers la même tuile)
+ - Tous les tunnels ne sont pas à côté (on en test 2 pour garantir au moins 1 paire utile)
 
  **On n'évalue en profondeur que les n meilleures cartes.**
 
