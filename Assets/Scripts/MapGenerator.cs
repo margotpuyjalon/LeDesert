@@ -23,7 +23,8 @@ public enum Type
 
 public class MapGenerator
 {
-    private const int NB_MAP_TO_CREATE = 10;
+    private const int NB_MAP_TO_CREATE = 100;
+    private const int NB_MAP_TO_EVAL = 10;
     private const int NB_TEST_PER_MAP = 3;
 
     // Create n basic map
@@ -86,11 +87,8 @@ public class MapGenerator
     private static int MapComparator (EvaluatedMap x, EvaluatedMap y)
     {
         int comparison = 0;
-        // x Eval greater
+        // x Eval too high
         if (x.Eval > y.Eval)
-            comparison = 1;
-        // x Turns too low
-        else if (y.Eval > x.Eval && x.NbTurns < 4)
             comparison = 1;
         // good
         else if (y.Eval > x.Eval)
@@ -109,16 +107,27 @@ public class MapGenerator
 
         CreateNewMaps(NB_MAP_TO_CREATE, mapList);
 
+        // First evaluation
         foreach (EvaluatedMap m in mapList)
         {
             ShuffleTiles(m.TypesMap, rnd);  // Mutate the map
-            evaluator.EvaluateMap(m, x, y); // Give a mark according to piles positions
-            player.TestMap(m, NB_TEST_PER_MAP);    // Give a mark according to number of turns before success or fail
+            evaluator.EvaluateForbiddenMap(m, x, y); // Give a mark according to piles positions
         }
-
         mapList.Sort(MapComparator);
-        for(int i=0; i<5; i++)Display(mapList[i], x, y);
-        return mapList[0].TypesMap; // Return the best map
+
+        // Deep evaluation on the bests maps
+        int averageNbTurn = 0;
+        for (int i=0; i<NB_MAP_TO_EVAL; i++)
+        {
+            player.TestMap(mapList[i], NB_TEST_PER_MAP); // Give a mark according to number of turns before success or fail
+            averageNbTurn += mapList[i].NbTurns;
+        }
+        averageNbTurn = averageNbTurn / NB_MAP_TO_EVAL;
+
+        for(int i=0; i< NB_MAP_TO_EVAL; i++)Display(mapList[i], x, y);
+        return mapList.Find(
+            m => m.NbTurns > (averageNbTurn - 2) 
+            && m.NbTurns < (averageNbTurn + 2)).TypesMap; // Return the best map
     }
 
     // FOR DEBUG

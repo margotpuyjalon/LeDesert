@@ -26,8 +26,8 @@ public class EvaluatedMap
 
 public class MapEvaluator
 {
-    // Evaluate a map
-    public void EvaluateMap(EvaluatedMap map, int x, int y)
+    // Evaluate forbidden composition of map
+    public void EvaluateForbiddenMap(EvaluatedMap map, int x, int y)
     {
         // Initialize positions to avoid conflics with true positions
         int hp1 = -1, vp1 = -1,
@@ -73,7 +73,7 @@ public class MapEvaluator
         };
         if (ContainsDuplicates(p)) map.Eval += 20;
 
-        Debug.Log("Note map = " + map.Eval);
+        // Debug.Log("Note map = " + map.Eval);
 
     }
 
@@ -114,7 +114,7 @@ public class PlayerEvaluator
         // Testting the map nbTimes times
         for (int k = 0; k < nbTimes; k++)
         {
-            Debug.Log("TEST MAP: "+k);
+            // Debug.Log("TEST MAP: "+k);
             Vector2 start = new Vector2();
             
 
@@ -136,7 +136,7 @@ public class PlayerEvaluator
 
             // Set the player position on start
             Position = start;
-            Debug.Log("START : x:" + Position.x + " y:" + Position.y);
+            // Debug.Log("START : x:" + Position.x + " y:" + Position.y);
             // Play until victory
             // Have to find all clues and the end to win
             bool victory = false;
@@ -149,7 +149,7 @@ public class PlayerEvaluator
                 int ap = ActionPoints;
                 while (ap > 0)
                 {
-                    Display(PlayerBoard, 7, 7);
+                    // Display(PlayerBoard, 7, 7);
 
                     // DISCOVER the tile under if not already discovered
                     // And check the discovered tile
@@ -157,7 +157,7 @@ public class PlayerEvaluator
                     if (ap > 0 && PlayerBoard[(int)Position.x + 1, (int)Position.y + 1] == Card.HIDDEN)
                     {
                         ap--; // Use one action point to discover
-                        Debug.Log("DISC : ap = " + ap + " / tile : x:" + Position.x + " y:" + Position.y);
+                        // Debug.Log("DISC : ap = " + ap + " / tile : x:" + Position.x + " y:" + Position.y);
                         PlayerBoard[(int)Position.x + 1, (int)Position.y + 1] = Card.DISCOVERED;
                         switch (tile)
                         {
@@ -202,7 +202,7 @@ public class PlayerEvaluator
                         ap--; // Use one action point to move
                         Vector2 moveTo = Move(Position, PlayerBoard);
                         Position = new Vector2(moveTo.x, moveTo.y);
-                        Debug.Log("MOVE : ap = " + ap + " / tile : x:" + Position.x + " y:" + Position.y);
+                        // Debug.Log("MOVE : ap = " + ap + " / tile : x:" + Position.x + " y:" + Position.y);
                     }
 
                     if (victory) break;
@@ -211,12 +211,12 @@ public class PlayerEvaluator
                 if (j == 999) Debug.Log("OUT OF TIME FOR VICTORY");
                 // Tornado time
             }
-            Debug.Log("nbTurns : " + nbTurns);
+            // Debug.Log("nbTurns : " + nbTurns);
         }
 
         // Average nuber of turns needed to win the map
         map.NbTurns = nbTurns / nbTimes;
-        Debug.Log("map tunrs : " + map.NbTurns);
+        // Debug.Log("map tunrs : " + map.NbTurns);
     }
 
     // Move of 1 tile
@@ -236,8 +236,8 @@ public class PlayerEvaluator
         if (playerBoard[(int)Position.x + 2, (int)Position.y + 1] == Card.FORBIDDEN) // droite
             xAvailableDirections[2] = 0;
 
-        Debug.Log("x dir : " + xAvailableDirections[0] + ", " + xAvailableDirections[1] + ", " + xAvailableDirections[2] + "\n"
-            + "y dir : " + yAvailableDirections[0] + ", " + yAvailableDirections[1] + ", " + yAvailableDirections[2]);
+        // Debug.Log("x dir : " + xAvailableDirections[0] + ", " + xAvailableDirections[1] + ", " + xAvailableDirections[2] + "\n"
+        //    + "y dir : " + yAvailableDirections[0] + ", " + yAvailableDirections[1] + ", " + yAvailableDirections[2]);
 
         // Prioritizes hidden tiles
         if (playerBoard[(int)Position.x + 1, (int)Position.y] == Card.HIDDEN) // haut
@@ -260,7 +260,6 @@ public class PlayerEvaluator
             }
         }
         
-
         Vector2 tile = new Vector2(currentPos.x + direction.x, currentPos.y + direction.y);
         return tile;        
     }
