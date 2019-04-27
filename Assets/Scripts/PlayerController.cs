@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+	// Player stats
 	public int hitPoints = 4;
 	public int actionPoints = 4;
-	//public Item item;
 
-	public bool revealedPiece1 = false;
-	public bool revealedPiece2 = false;
-	public bool revealedPiece3 = false;
-	public bool revealedPiece4 = false;
+	// Players pieces
+	public bool piece1 = false;
+	public bool piece2 = false;
+	public bool piece3 = false;
+	public bool piece4 = false;
+
+	// Current map on play
+	public Map currentMap;
 
 	// Start is called before the first frame update
 	void Start()
@@ -21,56 +25,56 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		Move();
+		if(currentMap.startedGame) Move(); 
 	}
 
 	// Translate character sprite
 	private void Move()
 	{
-		GameObject objStorm = GameObject.Find("Tile_storm(Clone)");
-		if (GetStandingTile().nbSandBlocks < 2 && actionPoints != 0)  // si tuile sur laquelle on est n'est pas ensablee
+		GameObject objStorm = GameObject.Find("Tile_storm(Clone)");																			// Get the Storm tile position
+		if (GetStandingTile().nbSandBlocks < 2 && actionPoints != 0)																		// If the player can move
 		{
-			if (Input.GetKeyUp("up") && gameObject.transform.position.y < 2.5)
+			if (Input.GetKeyUp("up") && gameObject.transform.position.y < 2.5)																// If the player is not at the top border of the map
 			{
-				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 1))) //Il n'y a pas la tornade
+				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 1)))	//	And if the Storm is not on the path
 				{
-					//if (GetNextTile(new Vector3(0, 1, 0)).nbSandBlocks < 2)
+					//if (GetNextTile(new Vector3(0, 1, 0)).nbSandBlocks < 2) // FOR DIG AMELIORATION
 					//{
-						gameObject.transform.Translate(0, 1, 0);
-						actionPoints--;
+					gameObject.transform.Translate(0, 1, 0);																				// Then translate the player
+					actionPoints--;																											// Use ont aqction point
 					//}
 				}
 			}		 // Up
-			if (Input.GetKeyUp("down") && gameObject.transform.position.y > -1.5)
+			if (Input.GetKeyUp("down") && gameObject.transform.position.y > -1.5)															// If the player is not at the bottom border of the map
 			{
-				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x, gameObject.transform.position.y - 1))) //Il n'y a pas la tornade
+				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x, gameObject.transform.position.y - 1)))	//	And if the Storm is not on the path
 				{
-					//if (GetNextTile(new Vector3(0, -1, 0)).nbSandBlocks < 2)
+					//if (GetNextTile(new Vector3(0, -1, 0)).nbSandBlocks < 2) // FOR DIG AMELIORATION
 					//{
-						gameObject.transform.Translate(0, -1, 0);
-						actionPoints--;
+					gameObject.transform.Translate(0, -1, 0);                                                                               // Then translate the player
+					actionPoints--;																											// Use ont action point
 					//}
 				}
 			}	 // Down
-			if (Input.GetKeyUp("right") && gameObject.transform.position.x < 2.5)
+			if (Input.GetKeyUp("right") && gameObject.transform.position.x < 2.5)                                                           // If the player is not at the right border of the map
 			{
-				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y))) //Il n'y a pas la tornade
+				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y)))    //	And if the Storm is not on the path
 				{
-					//if (GetNextTile(new Vector3(1, 0, 0)).nbSandBlocks < 2)
+					//if (GetNextTile(new Vector3(1, 0, 0)).nbSandBlocks < 2)// FOR DIG AMELIORATION
 					//{
-						gameObject.transform.Translate(1, 0, 0);
-						actionPoints--;
+					gameObject.transform.Translate(1, 0, 0);                                                                                // Then translate the player
+					actionPoints--;                                                                                                         // Use ont action point
 					//}
 				}
 			}	 // Right
-			if (Input.GetKeyUp("left") && gameObject.transform.position.x > -1.5)
+			if (Input.GetKeyUp("left") && gameObject.transform.position.x > -1.5)                                                           // If the player is not at the left border of the map
 			{
-				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y))) //Il n'y a pas la tornade
+				if (!(objStorm.transform.position == new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y)))    //	And if the Storm is not on the path
 				{
-					//if (GetNextTile(new Vector3(-1, 0, 0)).nbSandBlocks < 2)
+					//if (GetNextTile(new Vector3(-1, 0, 0)).nbSandBlocks < 2)// FOR DIG AMELIORATION
 					//{
-						gameObject.transform.Translate(-1, 0, 0);
-						actionPoints--;
+					gameObject.transform.Translate(-1, 0, 0);                                                                               // Then translate the player
+					actionPoints--;                                                                                                         // Use ont action point
 					//}
 				}
 			}	 // Left
@@ -80,58 +84,44 @@ public class PlayerController : MonoBehaviour
 	// Change player hit points
 	public void ChangeLife(int amount)
 	{
-		hitPoints += amount;
+		hitPoints += amount; // Change player's life amount, thanks to the given amount
 	}
 
 	// Dig sand
-	public void Dig() //Type TILE a integrer
+	public void Dig()
 	{
-		if (actionPoints != 0)
+		if (actionPoints != 0)														// If the player can act
 		{
-			if (GetStandingTile().transform.position.x == transform.position.x && GetStandingTile().transform.position.y == transform.position.y)
+			if (GetStandingTile().GetComponent<Tile>().nbSandBlocks != 0)			// And if the tile has sand on it
 			{
-				if (GetStandingTile().GetComponent<Tile>().nbSandBlocks != 0)
-				{
-					GetStandingTile().GetComponent<Tile>().RemoveSandblock();
-					GameObject.Find("Tilemap").GetComponent<Map>().sandBlocksLeft++;
-					actionPoints--;
-				}
-				else print("Cannot dig here !");
+				GetStandingTile().GetComponent<Tile>().RemoveSandblock();			// Then Remove one block on it
+				GameObject.Find("Tilemap").GetComponent<Map>().sandBlocksLeft++;	// Add the removed block to the block stockpile
+				actionPoints--;														// Use one action point
 			}
+			else print("Cannot dig here !");
 		}
 	}
 
 	// Discover tile 
 	public void Discover()
 	{
-		if (actionPoints != 0)
+		if (actionPoints != 0)														// If the player can act, 
 		{
-			if (GetStandingTile().transform.position.x == transform.position.x && GetStandingTile().transform.position.y == transform.position.y)
+			Tile standingTile = GetStandingTile().GetComponent<Tile>();				// Get the standingTile
+			if (!standingTile.isDiscovered && standingTile.nbSandBlocks==0)
 			{
-				Tile standingTile = GetStandingTile().GetComponent<Tile>();
-				
-				if (!standingTile.isDiscovered && standingTile.nbSandBlocks==0)
-				{
-					UseItem(standingTile.GetItem());
-					GameObject.Find("Tilemap").GetComponent<Map>().AffichagePiece();
-					actionPoints--;
-				}
+				UseItem(standingTile.GetItem());									// Use the items holded by the tile
+				GameObject.Find("Tilemap").GetComponent<Map>().DisplayPieces();	// Check if a piece should appear after discovering the tile
+				actionPoints--;														// Use one acttion point
 			}
 		}
 	}
 
-	// Use an item
-	public void UseItem(Item item)
-	{
-		item.UseItem(this.gameObject, this);
-		// IL FAUT L'ENLEVER DE LA LISTE
-	}
-
-	// Get the tile where the player is on
+	// Get the tile where the player stands on
 	private Tile GetStandingTile()
 	{
-		GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile"); // get all inPlayTiles
-		foreach (GameObject tile in tiles)
+		GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");	// get all inPlayTiles
+		foreach (GameObject tile in tiles)										// Get the tile where the player stands on
 		{
 			if (tile.transform.position.x == transform.position.x && tile.transform.position.y == transform.position.y)
 			{
@@ -144,11 +134,10 @@ public class PlayerController : MonoBehaviour
 	// Get the tile where the player want to move
 	private Tile GetNextTile(Vector3 move)
 	{
-		GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile"); // get all inPlayTiles
-		foreach (GameObject tile in tiles)
+		GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");	// get all inPlayTiles
+		foreach (GameObject tile in tiles)										// Check the next tile to move, thank to the give move
 		{
-			// Check the next tile
-			if ((tile.transform.position.x - move.x) == transform.position.x && (tile.transform.position.y - move.y) == transform.position.y)
+			if ((tile.transform.position.x - move.x) == transform.position.x && (tile.transform.position.y - move.y) == transform.position.y)	
 			{
 				return tile.GetComponent<Tile>();
 			}
@@ -156,35 +145,47 @@ public class PlayerController : MonoBehaviour
 		return null;
 	}
 
+	// Get one of the 4 pieces if the player stands on it
 	public void GetPiece()
 	{
+		// Get all pieces position
 		List<GameObject> pieces = new List<GameObject>();
 		pieces.Add(GameObject.Find("bluePiece"));
 		pieces.Add(GameObject.Find("greenPiece"));
 		pieces.Add(GameObject.Find("redPiece"));
 		pieces.Add(GameObject.Find("purplePiece"));
-
-		if (GetStandingTile().nbSandBlocks == 0 && actionPoints != 0)
+		
+		
+		if (actionPoints != 0)																										// If the player can act,
 		{
-			if (GetStandingTile().isDiscovered)
+			if (GetStandingTile().nbSandBlocks == 0)																				// If the tile have no sand on it
 			{
-				foreach (GameObject piece in pieces)
+				if (GetStandingTile().isDiscovered)																					// And if it has been discovered,
 				{
-					// Check the piece to gather
-					if (piece.transform.position.x == transform.position.x && piece.transform.position.y == transform.position.y)
+					foreach (GameObject piece in pieces)																			// Then check the piece to grab
 					{
-						if (piece.name == "bluePiece") revealedPiece1 = true;
-						if (piece.name == "greenPiece") revealedPiece2 = true;
-						if (piece.name == "redPiece") revealedPiece3 = true;
-						if (piece.name == "purplePiece") revealedPiece4 = true;
-
-						piece.transform.Translate(1000, 0, 0);
-						actionPoints--;
+						if (piece.transform.position.x == transform.position.x && piece.transform.position.y == transform.position.y) // by matching positions
+						{										
+							if (piece.name == "bluePiece") piece1 = true;													// Get the right piece
+							if (piece.name == "greenPiece") piece2 = true;
+							if (piece.name == "redPiece") piece3 = true;
+							if (piece.name == "purplePiece") piece4 = true;
+							piece.transform.Translate(1000, 0, 0);																	// Translate it away from the map
+							actionPoints--;																							// Use one action point
+						}
 					}
 				}
+				else print("I have to discover the tile first !");
 			}
-			else print("I have to discover the tile first !");
+			else print("Too much sand ! I have to dig the tile first.");
 		}
-		else print("Cannot grab the piece !");
+		else print("Cannot act anymore this turn...");
+	}
+
+	// Use an item (ITEMS NOT IMPLEMENTED)
+	public void UseItem(Item item)
+	{
+		item.UseItem(this.gameObject, this);
+		// IL FAUT L'ENLEVER DE LA LISTE
 	}
 }
