@@ -24,7 +24,7 @@ public class Tile : MonoBehaviour
 	void Start()
     {
 		gameObject.transform.Find("PeuEnsable").gameObject.SetActive(false);
-				gameObject.transform.Find("TresEnsable").gameObject.SetActive(false);
+		gameObject.transform.Find("TresEnsable").gameObject.SetActive(false);
 	}
 
     // Update is called once per frame

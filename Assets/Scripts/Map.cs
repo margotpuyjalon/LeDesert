@@ -159,7 +159,7 @@ public class Map : MonoBehaviour
             }
         }
         print("---");
-        player.GetComponent<PlayerController>().actionPoints = 4;				// Then set the player's action points to 4
+        player.GetComponent<PlayerController>().ResetActionPoints();				// Then set the player's action points to 4
     }
 
 	// Display the map

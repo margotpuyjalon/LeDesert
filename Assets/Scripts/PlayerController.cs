@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -16,6 +17,10 @@ public class PlayerController : MonoBehaviour
 
 	// Current map on play
 	public Map currentMap;
+
+	// Curent Textboxes
+	public Text hitPointTextbox;
+	public Text actionPointTextbox;
 
 	// Start is called before the first frame update
 	void Start()
@@ -50,7 +55,8 @@ public class PlayerController : MonoBehaviour
 					//if (GetNextTile(new Vector3(0, 1, 0)).nbSandBlocks < 2) // FOR DIG AMELIORATION
 					//{
 					gameObject.transform.Translate(0, 1, 0);																				// Then translate the player
-					actionPoints--;																											// Use ont aqction point
+					actionPoints--;                                                                                                         // Use one action point
+					actionPointTextbox.text = "Action Points : " + actionPoints;															// Set the textbox
 					//}
 				}
 			}		 // Up
@@ -61,7 +67,8 @@ public class PlayerController : MonoBehaviour
 					//if (GetNextTile(new Vector3(0, -1, 0)).nbSandBlocks < 2) // FOR DIG AMELIORATION
 					//{
 					gameObject.transform.Translate(0, -1, 0);                                                                               // Then translate the player
-					actionPoints--;																											// Use ont action point
+					actionPoints--;                                                                                                         // Use one action point
+					actionPointTextbox.text = "Action Points : " + actionPoints;                                                            // Set the textbox
 					//}
 				}
 			}	 // Down
@@ -72,7 +79,8 @@ public class PlayerController : MonoBehaviour
 					//if (GetNextTile(new Vector3(1, 0, 0)).nbSandBlocks < 2)// FOR DIG AMELIORATION
 					//{
 					gameObject.transform.Translate(1, 0, 0);                                                                                // Then translate the player
-					actionPoints--;                                                                                                         // Use ont action point
+					actionPoints--;                                                                                                         // Use one action point
+					actionPointTextbox.text = "Action Points : " + actionPoints;                                                            // Set the textbox
 					//}
 				}
 			}	 // Right
@@ -83,7 +91,8 @@ public class PlayerController : MonoBehaviour
 					//if (GetNextTile(new Vector3(-1, 0, 0)).nbSandBlocks < 2)// FOR DIG AMELIORATION
 					//{
 					gameObject.transform.Translate(-1, 0, 0);                                                                               // Then translate the player
-					actionPoints--;                                                                                                         // Use ont action point
+					actionPoints--;                                                                                                         // Use one action point
+					actionPointTextbox.text = "Action Points : " + actionPoints;                                                            // Set the textbox
 					//}
 				}
 			}	 // Left
@@ -93,7 +102,8 @@ public class PlayerController : MonoBehaviour
 	// Change player hit points
 	public void ChangeLife(int amount)
 	{
-		hitPoints += amount; // Change player's life amount, thanks to the given amount
+		hitPoints += amount;									// Change player's life amount, thanks to the given amount
+		hitPointTextbox.text = "Hit Points : " + hitPoints;     // Set the textbox
 	}
 
 	// Dig sand
@@ -105,7 +115,8 @@ public class PlayerController : MonoBehaviour
 			{
 				GetStandingTile().GetComponent<Tile>().RemoveSandblock();			// Then Remove one block on it
 				GameObject.Find("Tilemap").GetComponent<Map>().sandBlocksLeft++;	// Add the removed block to the block stockpile
-				actionPoints--;														// Use one action point
+				actionPoints--;                                                     // Use one action point
+				actionPointTextbox.text = "Action Points : " + actionPoints;        // Set the textbox
 			}
 			else print("Cannot dig here !");
 		}
@@ -120,8 +131,9 @@ public class PlayerController : MonoBehaviour
 			if (!standingTile.isDiscovered && standingTile.nbSandBlocks==0)
 			{
 				UseItem(standingTile.GetItem());									// Use the items holded by the tile
-				GameObject.Find("Tilemap").GetComponent<Map>().DisplayPieces();	// Check if a piece should appear after discovering the tile
-				actionPoints--;														// Use one acttion point
+				GameObject.Find("Tilemap").GetComponent<Map>().DisplayPieces();		// Check if a piece should appear after discovering the tile
+				actionPoints--;                                                     // Use one acttion point
+				actionPointTextbox.text = "Action Points : " + actionPoints;        // Set the textbox
 			}
 		}
 	}
@@ -175,12 +187,13 @@ public class PlayerController : MonoBehaviour
 					{
 						if (piece.transform.position.x == transform.position.x && piece.transform.position.y == transform.position.y) // by matching positions
 						{										
-							if (piece.name == "bluePiece") piece1 = true;													// Get the right piece
+							if (piece.name == "bluePiece") piece1 = true;															// Get the right piece
 							if (piece.name == "greenPiece") piece2 = true;
 							if (piece.name == "redPiece") piece3 = true;
 							if (piece.name == "purplePiece") piece4 = true;
 							piece.transform.Translate(1000, 0, 0);																	// Translate it away from the map
-							actionPoints--;																							// Use one action point
+							actionPoints--;                                                                                         // Use one action point
+							actionPointTextbox.text = "Action Points : " + actionPoints;                                            // Set the textbox
 						}
 					}
 				}
@@ -196,5 +209,12 @@ public class PlayerController : MonoBehaviour
 	{
 		item.UseItem(this.gameObject, this);
 		// IL FAUT L'ENLEVER DE LA LISTE
+	}
+
+	// Reset the action points of the player
+	public void ResetActionPoints()
+	{
+		actionPoints = 4;												// Reset action points to 4
+		actionPointTextbox.text = "Action Points : " + actionPoints;    // Set the textbox
 	}
 }
