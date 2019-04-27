@@ -20,7 +20,7 @@ public class Item
 		else
 		{
 			float r = Random.value;
-			newItem.type = (int)(r * 2);
+			newItem.type = (int)(r * 2.9);
 		}
 		return newItem;
 	}
@@ -31,16 +31,16 @@ public class Item
 		{
 			case ((int)ItemType.ACCELERATEUR):
 				playerInfo.actionPoints += 1;
-                Debug.Log("Qu'est ce que ?! C'est l'accélérateur de temps ! Cela va me permettre de prendre un peu d'avance sur la tornade (+2 pts d'action)");
+                Debug.Log("Qu'est ce que ?! C'est l'accélérateur de temps ! Cela va me permettre de prendre un peu d'avance sur la tornade (+1 pts d'action)");
 				break;
 			case ((int)ItemType.COKTAIL):
 				playerInfo.actionPoints += 1;
 				playerInfo.ChangeLife(1);
-				Debug.Log("Quelqu'un a fait tombé sa flasque, ça va me requinquer un peu ! (+2 pts de vie / +2 pts d'action)");
+				Debug.Log("Quelqu'un a fait tombé sa flasque, ça va me requinquer un peu ! (+1 pts de vie / +1 pts d'action)");
                 break;
 			case ((int)ItemType.GOURDE):
 				playerInfo.ChangeLife(1);
-				Debug.Log("Une gourde d'eau à moité vide, de auoi me désaltérer. (+2 pts de vie)");
+				Debug.Log("Une gourde d'eau à moité vide, de auoi me désaltérer. (+1 pts de vie)");
 				break;
 		}
 			
