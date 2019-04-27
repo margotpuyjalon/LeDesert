@@ -11,6 +11,8 @@ public class Tile : MonoBehaviour
     public Item item;
 	public Text m_Text;
 
+	public Map currentMap;
+
 	public Tile(int t)
     {
         type = t;

@@ -27,25 +27,24 @@ public class Map : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        deck = new DeckManager();					// Get new instance of a storm deck
-
-        typeMapGenerator = new MapGenerator();		// Get a new instance of map generator
-        typesMap = typeMapGenerator.GetMap(5,5);	// Get a new map, ready to be displayed
+		typeMapGenerator = new MapGenerator();      // Get a new instance of map generator
 	}
-
     // Update is called once per fram
     void Update()
     {
 		// Check the loose conditions
-        if (	sandBlocksLeft == 0															// If the stockpile is empty,
+        if (	startedGame
+			&&(  sandBlocksLeft == 0														// If the stockpile is empty,
 			||	GameObject.Find("player").GetComponent<PlayerController>().hitPoints == 0	// If the player has no life
-			||	(difficulty > 15))															// And if the game's difficulty reached 15
+			||	(difficulty > 15)))															// And if the game's difficulty reached 15
         {EndGame(false);}																	// Then end the game
     }
 
 	// Start game actions
 	public void NewGame()
 	{
+		deck = new DeckManager();																				// Get new instance of a storm deck
+		typesMap = typeMapGenerator.GetMap(5, 5);																// Get a new map, ready to be displayed
 		startedGame = true;																						// The game started
 		Camera newPos = Camera.allCameras[0];																	// Moving the camera
 		newPos.transform.Translate(new Vector3(0, -6, 0));
@@ -58,14 +57,42 @@ public class Map : MonoBehaviour
     // End game actions
     void EndGame(bool win)
     {
-        if (win)	// If it's a win
+        if (win)																			// If it's a win
         {
-			startedGame = false;
+			startedGame = false;															// Game ends
+			sandBlocksLeft = 40;															// Reset stockpile
+			difficulty = 1;																	// Reset difficulty
+			GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");			// Get all tiles in play
+			foreach (GameObject tile in tiles)												// For each tiles
+			{
+				Destroy(tile);																// Destroy it !
+			}
+			GameObject.Find("bluePiece").transform.position = new Vector3(1000, 1000, 3);   // Hide the pieces
+			GameObject.Find("redPiece").transform.position = new Vector3(1000, 1000, 3);
+			GameObject.Find("greenPiece").transform.position = new Vector3(1000, 1000, 3);
+			GameObject.Find("purplePiece").transform.position = new Vector3(1000, 1000, 3);
+			Camera newPos = Camera.allCameras[0];											// Moving the camera
+			newPos.transform.Translate(new Vector3(0, 6, 0));
+			Camera.allCameras[0] = newPos;
 			print("Fin de la partie ! Vous avez gagné.");
         }
         else
         {
-			startedGame = false;
+			startedGame = false;															// Game ends
+			sandBlocksLeft = 40;															// Reset stockpile
+			difficulty = 1;																	// Reset difficulty
+			GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");			// Get all tiles in play
+			foreach (GameObject tile in tiles)												// For each tiles
+			{
+				Destroy(tile);																// Destroy it !
+			}
+			GameObject.Find("bluePiece").transform.position = new Vector3(1000, 1000, 3);   // Hide the pieces
+			GameObject.Find("redPiece").transform.position = new Vector3(1000, 1000, 3);
+			GameObject.Find("greenPiece").transform.position = new Vector3(1000, 1000, 3);
+			GameObject.Find("purplePiece").transform.position = new Vector3(1000, 1000, 3);
+			Camera newPos = Camera.allCameras[0];											// Moving the camera
+			newPos.transform.Translate(new Vector3(0, 6, 0));
+			Camera.allCameras[0] = newPos;
 			print("Fin de la partie ! Vous avez perdu.");
         }
     }

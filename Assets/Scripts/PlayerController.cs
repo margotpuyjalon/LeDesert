@@ -25,7 +25,16 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		if(currentMap.startedGame) Move(); 
+		if (currentMap.startedGame) Move();
+		else
+		{
+			piece1 = false;
+			piece2 = false;
+			piece3 = false;
+			piece4 = false;
+			hitPoints = 4;
+			actionPoints = 4;
+		}
 	}
 
 	// Translate character sprite
