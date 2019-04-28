@@ -5,6 +5,26 @@ Fichiers sources du projet de jeu intégrant de la génération procédurale.
 ## Principes du jeu
 Nous nous sommes inspirés du jeu de société *Le Désert interdit* pour faire ce jeu.
 
+### Règles en places
+Le joueur a 4 points d'actions. Avec, il peut : 
+ - se déplacer d'une tuile (coute 1 point)
+ - découvrir une tuile (coute 1 point)
+ - retirer du sable (1 couche coute 1 point)
+ - ramasser une pièce (coute 1 point)
+
+ **L'objectif du joueur** est de ramasser toutes les pièces (il y en a 4) et de se rendre sur la case de fin.
+
+ Toutes les cases (ou tuiles) ont une fonction : 
+  - *TECH* : donne une ressource au joueur (des points de vie ou des points d'action).
+  - *SOURCE* : donne des points de vie.
+  - *TUNNEL* : empèche le joueur de perdre des points de vie en cas de vague de chaleur.
+  - *START / END* : le joueur commence sur *START* et peut y récupérer une *TECH*. Il doit finir sur *END*.
+  - *HP? / VP?* : les indices horizontaux (*HP?*) et verticaux (*VP?*) des pièces. La pièce *?* se trouve sur la case au croisement de ces directions.
+  - *STORM* : le joueur ne peut pas aller sur la case Tornade. Elle effectue des actions à la fin du tour de jeu du joueur (quand il n'a plus de point d'action) : 
+  	- Elle se déplace et dépose du sable sur son passage.
+  	- La difficulté du jeu augmente. A partir d'un certain seuil, la Tornade effectue plus d'action pendant son tour (elle commence à 1).
+  	- Une vague de chaleur fait perdre des points de vie au joueur.
+
 ## Génération de la carte du jeu
 Ci-dessous, les règles utilisées pour générer une "bonne" carte.
 
@@ -32,8 +52,8 @@ On compte le nombre de tour qu'il faut à ce joueur pour remplir les conditions 
 On sélectionne la carte avec un nombre de tour moyen sur toutes les cartes testées.
 
 ## A venir ...
- - Test de nouvelles tuiles
- - Test de nouvelles règles du jeu
- - Intégration de niveaux de difficulté
- - Intégration du choix du personnage
- - Intégration des capacité spéciale des personnages
+ - Une interface plus sympa (affichage des actions de la Tornade sous forme de carte)
+ - De nouvelles tuiles
+ - De nouvelles règles du jeu
+ - Des niveaux de difficulté
+ - Le choix du personnage avec des capacités spéciales
