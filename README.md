@@ -6,25 +6,33 @@ Fichiers sources du projet de jeu intégrant de la génération procédurale.
 Nous nous sommes inspirés du jeu de société *Le Désert interdit* pour faire ce jeu.
 
 ### Règles en places
-Le joueur a 4 points d'actions. Avec, il peut : 
- - se déplacer d'une tuile (coute 1 point)
- - découvrir une tuile (coute 1 point)
- - retirer du sable (1 couche coute 1 point)
- - ramasser une pièce (coute 1 point)
+Le jeu se joue sur un plateau de 5x5.
+Chaque tour, le joueur a 4 points d'actions. Pour 1 point, il peut : 
+  - se déplacer d'une tuile
+  - retourner/découvrir la tuile où il se trouve
+  - retirer une couche de sable de la tuile
+  - ramasser une pièce qui se trouve sur la même tuile que lui
+A la fin du tour, il pioche un certain nombre de cartes selon le niveau de difficulté :
+  - 1 pour une diffculté de 1 à 3
+  - 2 pour une diffculté de 4 à 6
+  - 3 pour une diffculté de 7 à 9
+  - 4 pour une diffculté de 10 à 12
+  - 5 pour une diffculté de 13 à 15
 
- **L'objectif du joueur** est de ramasser toutes les pièces (il y en a 4) et de se rendre sur la case de fin.
+ **L'objectif du joueur** est de ramasser les 4 pièces puis de se rendre sur la case de fin non ensevelie.
+ **Le joueur perd** si ses points de vie tombent à 0 ou si le niveau de chaleur (la difficulté) arrive à son maximum (16).
 
- Toutes les cases (ou tuiles) ont une fonction : 
-  - *TECH* : donne une ressource au joueur (des points de vie ou des points d'action).
+ Toutes les cases (ou tuiles) ont un type :
+ - *HP? / VP?* : les indices horizontaux (*HP?*) et verticaux (*VP?*) des pièces. La pièce *?* se trouve sur la case au croisement de ces directions.
+ - *STORM* : La tornade effectue des actions à la fin de chaque tour selon la carte piochée : 
+  	- Elle se déplace de 1, 2, ou 3 cases. Lorsqu'elle bouge elle décale les tuiles et dépose du sable sur son passage .
+  	- Elle entraîne une vague de chaleur qui fait perdre un point de vie au joueur.
+   Le joueur ne peut pas aller sur cette case. 
+  - *TECH* : actionne une ressource pour le joueur qui lui donne des points de vie ou des points d'action.
   - *SOURCE* : donne des points de vie.
   - *TUNNEL* : empèche le joueur de perdre des points de vie en cas de vague de chaleur.
-  - *START / END* : le joueur commence sur *START* et peut y récupérer une *TECH*. Il doit finir sur *END*.
-  - *HP? / VP?* : les indices horizontaux (*HP?*) et verticaux (*VP?*) des pièces. La pièce *?* se trouve sur la case au croisement de ces directions.
-  - *STORM* : le joueur ne peut pas aller sur la case Tornade. Elle effectue des actions à la fin du tour de jeu du joueur (quand il n'a plus de point d'action) : 
-  	- Elle se déplace et dépose du sable sur son passage.
-  	- La difficulté du jeu augmente. A partir d'un certain seuil, la Tornade effectue plus d'action pendant son tour (elle commence à 1).
-  	- Une vague de chaleur fait perdre des points de vie au joueur.
-
+  - *START / END* : le joueur commence sur *START* et doit finir sur *END*. Elles octoient un effet *TECH* lorsqu'on les retourne.
+  
 ## Génération de la carte du jeu
 Ci-dessous, les règles utilisées pour générer une "bonne" carte.
 
@@ -53,7 +61,7 @@ On sélectionne la carte avec un nombre de tour moyen sur toutes les cartes test
 
 ## A venir ...
  - Une interface plus sympa (affichage des actions de la Tornade sous forme de carte)
- - De nouvelles tuiles
- - De nouvelles règles du jeu
- - Des niveaux de difficulté
- - Le choix du personnage avec des capacités spéciales
+ - Ajout de nouvelles tuiles (mirage) et ressources
+ - De nouvelles règles du jeu (par ex. utilisation des tunnels)
+ - Le choix du niveau de difficulté de départ
+ - Choisir un personnage avec des capacités spéciales
