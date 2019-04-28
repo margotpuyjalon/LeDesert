@@ -71,8 +71,8 @@ public class Map : MonoBehaviour
 	public void NewGame()
 	{
 		deck = new DeckManager();																				// Get new instance of a storm deck
-		typesMap = typeMapGenerator.GetMap(5, 5);																// Get a new map, ready to be displayed
-        startedGame = true;																						// The game started
+		typesMap = typeMapGenerator.GetMap(5, 5); //!\\ must not change the map's size								// Get a new map, ready to be displayed
+		startedGame = true;																						// The game started
 		Camera newPos = Camera.allCameras[0];																	// Moving the camera
 		newPos.transform.Translate(new Vector3(0, -6, 0));
 		Camera.allCameras[0] = newPos;
@@ -358,18 +358,5 @@ public class Map : MonoBehaviour
 		{
 			if (!player.GetComponent<PlayerController>().piece4) GameObject.Find("purplePiece").transform.position = new Vector3(VP4, HP4, -3);
 		}												// If the two clues of the Fourth piece have been discovered
-
-		// FOR DEBUG
-		//void Display(int x, int y)
-		//{
-		//    print("map");
-		//    for (int i = 0; i < x; i++)
-		//    {
-		//        for (int j = 0; j < y; j++)
-		//        {
-		//            print(map[i, j].type);
-		//        }
-		//    }
-		//}
 	}
 }
