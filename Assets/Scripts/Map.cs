@@ -338,7 +338,6 @@ public class Map : MonoBehaviour
 			}
 		}
 
-		Debug.Log(HP1+""+VP1 + "" + HP2 + "" + VP2 + "" + HP3 + "" + VP3 + "" + HP4 + "" + VP4);
 		if (HP1 > -2 && VP1 > -2)
 		{ 
 			if (!playerGo.GetComponent<PlayerController>().piece1) GameObject.Find("bluePiece").transform.position = new Vector3(VP1, HP1, -3);

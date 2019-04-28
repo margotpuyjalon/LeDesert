@@ -39,7 +39,6 @@ public class Tile : MonoBehaviour
 		item = new Item();
 		item = item.GenerateItem(type);
 		gameObject.transform.Find("hidden").gameObject.SetActive(false);
-		print(item.type);
 		return item;
 	}
 
