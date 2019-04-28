@@ -1,18 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Map : MonoBehaviour
 {
 	// Number of tile on play
     const int NB_TILE = 25;
+    //
+    const string INFO_DEFAULT_VALUE = "Move with arrows on your keyboard !";
 
 	// Get instance of a map generator
     private MapGenerator typeMapGenerator;
 	// Get instance of tile types
     private Type[,] typesMap;
+    // Component for information messages
+    private Text infoComponent;
 	// Map difficulty
     private int difficulty = 1;
+    private int difficulty_max = 16;
 
 	// Get instance of each different object of the game
     public GameObject Tile_tech, Tile_source, Tile_start, Tile_end, Tile_tunnel, Tile_storm,
@@ -28,7 +34,10 @@ public class Map : MonoBehaviour
     void Start()
     {
 		typeMapGenerator = new MapGenerator();      // Get a new instance of map generator
-	}
+        infoComponent = GameObject.Find("InfoTextBox").GetComponent<Text>();
+        infoComponent.text = INFO_DEFAULT_VALUE;
+    }
+
     // Update is called once per fram
     void Update()
     {
@@ -59,7 +68,8 @@ public class Map : MonoBehaviour
     {
         if (win)																			// If it's a win
         {
-			startedGame = false;															// Game ends
+            print("win!");
+            startedGame = false;															// Game ends
 			sandBlocksLeft = 40;															// Reset stockpile
 			difficulty = 1;																	// Reset difficulty
 			GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");			// Get all tiles in play
@@ -74,11 +84,12 @@ public class Map : MonoBehaviour
 			Camera newPos = Camera.allCameras[0];											// Moving the camera
 			newPos.transform.Translate(new Vector3(0, 6, 0));
 			Camera.allCameras[0] = newPos;
-			print("Fin de la partie ! Vous avez gagné.");
+            infoComponent.text = INFO_DEFAULT_VALUE;
         }
         else
         {
-			startedGame = false;															// Game ends
+            print("loose!");
+            startedGame = false;															// Game ends
 			sandBlocksLeft = 40;															// Reset stockpile
 			difficulty = 1;																	// Reset difficulty
 			GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");			// Get all tiles in play
@@ -93,7 +104,7 @@ public class Map : MonoBehaviour
 			Camera newPos = Camera.allCameras[0];											// Moving the camera
 			newPos.transform.Translate(new Vector3(0, 6, 0));
 			Camera.allCameras[0] = newPos;
-			print("Fin de la partie ! Vous avez perdu.");
+            infoComponent.text = INFO_DEFAULT_VALUE;
         }
     }
 	
@@ -108,7 +119,7 @@ public class Map : MonoBehaviour
 		for (int i = 0; i < nbOfPick; i++)
         {
             CardsType card = (CardsType)deck.PickNextCard();					// Draw a card
-            print(card);														// Display the card (CONSOLE FOR NOW)
+            print(card);                                                        // Display the card (CONSOLE FOR NOW)
             switch ((int)card)													// Select the card effect
             {
                 case (int)CardsType.DifficultyUp:								// Up the difficulty
@@ -117,6 +128,7 @@ public class Map : MonoBehaviour
 				case (int)CardsType.HeatWave:                                   // Heat wave
 					player.GetComponent<PlayerController>().ChangeLife(-1);		// Reduce player's life
 					print("Argh...La chaleur augmente... ! " + "Points de vie restants : " + player.GetComponent<PlayerController>().hitPoints);
+                    infoComponent.text = "Argh...The heat increases... ! ";
 					break;
 				case (int)CardsType.MoveOneToBot:								// Move the Storm 1 tile down
                     SwitchTiles(0, -1, 1);
@@ -257,7 +269,8 @@ public class Map : MonoBehaviour
     void ChangeDifficulty()
     {
         difficulty++;	// Up the difficlty of 1 level
-        print("Wow... Le vent devient encore plus violent, encore " + (16 - difficulty) + " fois et je vais y passer !");
+        print("Wow... Le vent devient encore plus violent, encore " + (difficulty_max - difficulty) + " fois et je vais y passer !");
+        infoComponent.text = "Wow... The wind is even more violent, " + (difficulty_max - difficulty) + " more times and I'll lose it !";
     }
 
 	// Display all discovered pieces, if their clues are also discovered
