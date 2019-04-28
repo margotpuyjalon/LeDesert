@@ -35,7 +35,7 @@ public class Map : MonoBehaviour
     //
     GameObject tileEndGo;
     // Instance of player
-    PlayerController player;
+    GameObject playerGo;
 
     // Start is called before the first frame update
     void Start()
@@ -45,7 +45,7 @@ public class Map : MonoBehaviour
         infoComponent = GameObject.Find("InfoTextBox").GetComponent<Text>();
         infoComponent.text = INFO_DEFAULT_VALUE;
 
-        player = GameObject.Find("player").GetComponent<PlayerController>();
+        playerGo = GameObject.Find("player");
     }
 
     // Update is called once per fram
@@ -55,12 +55,12 @@ public class Map : MonoBehaviour
         // Check the loose conditions
         if (	startedGame
 			&&(  sandBlocksLeft == 0														// If the stockpile is empty,
-			||	GameObject.Find("player").GetComponent<PlayerController>().hitPoints == 0	// If the player has no life
+			||	playerGo.GetComponent<PlayerController>().hitPoints == 0	// If the player has no life
 			||	(difficulty > 15)))															// And if the game's difficulty reached 15
         { EndGame(false); }																	// Then loose the game
 
-        if (player.piece1 && player.piece2 && player.piece3 && player.piece4
-            && player.transform.position.x == tileEndGo.transform.position.x && player.transform.position.y == tileEndGo.transform.position.y
+        if (playerGo.GetComponent<PlayerController>().piece1 && playerGo.GetComponent<PlayerController>().piece2 && playerGo.GetComponent<PlayerController>().piece3 && playerGo.GetComponent<PlayerController>().piece4
+            && playerGo.GetComponent<PlayerController>().transform.position.x == tileEndGo.transform.position.x && playerGo.GetComponent<PlayerController>().transform.position.y == tileEndGo.transform.position.y
             && tileEndGo.GetComponent<Tile>().isDiscovered && tileEndGo.GetComponent<Tile>().nbSandBlocks == 0)
         {
             EndGame(true);
@@ -78,8 +78,8 @@ public class Map : MonoBehaviour
 		Camera.allCameras[0] = newPos;
 		DisplayMap(5, 5);																						// Display generated map
         tileEndGo = GameObject.Find("Tile_end(Clone)");
-        GameObject.Find("player").transform.position = GameObject.Find("Tile_start(Clone)").transform.position;	// Move the player in the starting tile
-		GameObject.Find("player").transform.Translate(0, 0, -2);												// Then move it to the starting
+        playerGo.transform.position = GameObject.Find("Tile_start(Clone)").transform.position;  // Move the player in the starting tile
+        playerGo.transform.Translate(0, 0, -2);												// Then move it to the starting
         
     }
 
@@ -133,7 +133,6 @@ public class Map : MonoBehaviour
     {
         GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");	// Get all tiles in play
         GameObject objStorm = GameObject.Find("Tile_storm(Clone)");				// Get the Storm object
-        GameObject player = GameObject.Find("player");							// Get the player object
 
         int nbOfPick = (int)Mathf.Ceil(difficulty / 3.0f);                      // Storm cards draw calculation, linked with the difficulty
 		for (int i = 0; i < nbOfPick; i++)
@@ -146,8 +145,8 @@ public class Map : MonoBehaviour
                     ChangeDifficulty();
                     break;
 				case (int)CardsType.HeatWave:                                   // Heat wave
-					player.GetComponent<PlayerController>().ChangeLife(-1);		// Reduce player's life
-					print("Argh...La chaleur augmente... ! " + "Points de vie restants : " + player.GetComponent<PlayerController>().hitPoints);
+					playerGo.GetComponent<PlayerController>().ChangeLife(-1);		// Reduce player's life
+					print("Argh...La chaleur augmente... ! " + "Points de vie restants : " + playerGo.GetComponent<PlayerController>().hitPoints);
                     infoComponent.text = "Argh...The heat increases... ! ";
 					break;
 				case (int)CardsType.MoveOneToBot:								// Move the Storm 1 tile down
@@ -191,7 +190,7 @@ public class Map : MonoBehaviour
             }
         }
         print("---");
-        player.GetComponent<PlayerController>().ResetActionPoints();				// Then set the player's action points to 4
+        playerGo.GetComponent<PlayerController>().ResetActionPoints();				// Then set the player's action points to 4
     }
 
 	// Display the map
@@ -262,7 +261,6 @@ public class Map : MonoBehaviour
 	{
 		GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");				// Get all tiles in play
 		GameObject objStorm = GameObject.Find("Tile_storm(Clone)");							// Get the Storm object
-		GameObject player = GameObject.Find("player");										// Get the player object
 
 		for (int i = 0; i < nbtimes; i++)													// For each given nbtimes
 		{
@@ -273,9 +271,9 @@ public class Map : MonoBehaviour
 				{
 					go.transform.Translate(new Vector3(-x, -y, 0));							// Translate the tile on the Storm position
 					objStorm.transform.Translate(new Vector3(x, y, 0));						// Translate the Storm on it's new free position
-					if (player.transform.position.x == objStorm.transform.position.x
-						&& player.transform.position.y == objStorm.transform.position.y)	// If the player was on the translated tile
-					{ player.transform.Translate(new Vector3(-x, -y, 0)); }					// Also translate the player
+					if (playerGo.transform.position.x == objStorm.transform.position.x
+						&& playerGo.transform.position.y == objStorm.transform.position.y)	// If the player was on the translated tile
+					{ playerGo.transform.Translate(new Vector3(-x, -y, 0)); }					// Also translate the player
 				    go.GetComponent<Tile>().AddSandblock();									// Add sand block on the tile
                     sandBlocksLeft--;														// Remove a sandblock from the stockpile
 					break;
@@ -340,23 +338,22 @@ public class Map : MonoBehaviour
 			}
 		}
 
-		GameObject player = GameObject.Find("player");								// Get the player object
 		Debug.Log(HP1+""+VP1 + "" + HP2 + "" + VP2 + "" + HP3 + "" + VP3 + "" + HP4 + "" + VP4);
 		if (HP1 > -2 && VP1 > -2)
 		{ 
-			if (!player.GetComponent<PlayerController>().piece1) GameObject.Find("bluePiece").transform.position = new Vector3(VP1, HP1, -3);
+			if (!playerGo.GetComponent<PlayerController>().piece1) GameObject.Find("bluePiece").transform.position = new Vector3(VP1, HP1, -3);
 		}												// If the two clues of the First piece have been discovered
 		if (HP2 > -2 && VP2 > -2)
 		{
-			if (!player.GetComponent<PlayerController>().piece2) GameObject.Find("greenPiece").transform.position = new Vector3(VP2, HP2, -3);
+			if (!playerGo.GetComponent<PlayerController>().piece2) GameObject.Find("greenPiece").transform.position = new Vector3(VP2, HP2, -3);
 		}												// If the two clues of the Second piece have been discovered
 		if (HP3 > -2 && VP3 > -2)
 		{
-			if(!player.GetComponent<PlayerController>().piece3) GameObject.Find("redPiece").transform.position = new Vector3(VP3, HP3, -3);
+			if(!playerGo.GetComponent<PlayerController>().piece3) GameObject.Find("redPiece").transform.position = new Vector3(VP3, HP3, -3);
 		}												// If the two clues of the Third piece have been discovered
 		if (HP4 > -2 && VP4 > -2)
 		{
-			if (!player.GetComponent<PlayerController>().piece4) GameObject.Find("purplePiece").transform.position = new Vector3(VP4, HP4, -3);
+			if (!playerGo.GetComponent<PlayerController>().piece4) GameObject.Find("purplePiece").transform.position = new Vector3(VP4, HP4, -3);
 		}												// If the two clues of the Fourth piece have been discovered
 
 		// FOR DEBUG
