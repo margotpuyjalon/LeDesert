@@ -162,60 +162,61 @@ public class Evaluator
             {
                 // Display(EvaluatorBoard, 7, 7);
 
-                // VICTORY
-                if (pieces[0] && pieces[1] && pieces[2] && pieces[3] && end)
-                {
-                    victory = true;
-                    break;
-                }
-
                 // FIND PIECES
                 // 1
                 if (ap > 0 && clues[0] != 0 && clues[1] != 0 && !pieces[0])
                 {
-                    double dist = calculDist((int)Position.x, (int)Position.y, clues[0] - 1, clues[1] - 1);
+                    double dist = CalculDist((int)Position.x, (int)Position.y, clues[0] - 1, clues[1] - 1);
                     // Debug.Log("dist = " + dist);
                     if (dist < 3)
                     {
-                        ap--; // Use one action point to get the piece
+                        int[] state = GoFindPiece(dist, ap);
+                        nbTurns += state[0];
+                        ap = state[1]; // Use action points to get the piece
                         pieces[0] = true;
-                        // Debug.Log("FIND PIECE 1");
+                        //Debug.Log("FIND PIECE 1");
                     }
                 }
                 // 2
                 if (ap > 0 && clues[2] != 0 && clues[3] != 0 && !pieces[1])
                 {
-                    double dist = calculDist((int)Position.x, (int)Position.y, clues[2] - 1, clues[3] - 1);
+                    double dist = CalculDist((int)Position.x, (int)Position.y, clues[2] - 1, clues[3] - 1);
                     // Debug.Log("dist = " + dist);
                     if (dist < 3)
                     {
-                        ap--; // Use one action point to get the piece
+                        int[] state = GoFindPiece(dist, ap);
+                        nbTurns += state[0];
+                        ap = state[1]; // Use action points to get the piece
                         pieces[1] = true;
-                        // Debug.Log("FIND PIECE 2");
+                        //Debug.Log("FIND PIECE 2");
                     }
                 }
                 // 3
                 if (ap > 0 && clues[4] != 0 && clues[5] != 0 && !pieces[2])
                 {
-                    double dist = calculDist((int)Position.x, (int)Position.y, clues[4] - 1, clues[5] - 1);
+                    double dist = CalculDist((int)Position.x, (int)Position.y, clues[4] - 1, clues[5] - 1);
                     // Debug.Log("dist = " + dist);
                     if (dist < 3)
                     {
-                        ap--; // Use one action point to get the piece
+                        int[] state = GoFindPiece(dist, ap);
+                        nbTurns += state[0];
+                        ap = state[1]; // Use one action point to get the piece
                         pieces[2] = true;
-                        // Debug.Log("FIND PIECE 3");
+                        //Debug.Log("FIND PIECE 3");
                     }
                 }
                 // 4
                 if (ap > 0 && clues[6] != 0 && clues[7] != 0 && !pieces[3])
                 {
-                    double dist = calculDist((int)Position.x, (int)Position.y, clues[6] - 1, clues[7] - 1);
+                    double dist = CalculDist((int)Position.x, (int)Position.y, clues[6] - 1, clues[7] - 1);
                     // Debug.Log("dist = " + dist);
                     if (dist < 3)
                     {
-                        ap--; // Use one action point to get the piece
+                        int[] state = GoFindPiece(dist, ap);
+                        nbTurns += state[0];
+                        ap = state[1]; // Use one action point to get the piece
                         pieces[3] = true;
-                        // Debug.Log("FIND PIECE 4");
+                        //Debug.Log("FIND PIECE 4");
                     }
                 }
 
@@ -261,6 +262,13 @@ public class Evaluator
                     }
                 }
 
+                // VICTORY
+                if (pieces[0] && pieces[1] && pieces[2] && pieces[3] && end)
+                {
+                    victory = true;
+                    break;
+                }
+
                 // MOVE
                 if (ap > 0)
                 {
@@ -272,9 +280,8 @@ public class Evaluator
             }
             if (victory) break;
             // Tornado time
+            // Tornado is not implemented yet
             if (j == 999) Debug.Log("OUT OF TIME FOR VICTORY");
-
-            // Debug.Log("nbTurns : " + nbTurns);
         }
         // Number of turns needed to win the map
         map.NbTurns = nbTurns;
@@ -302,12 +309,17 @@ public class Evaluator
         return false;
     }
 
-    // Move of 1 tile
+    /// <summary>
+    /// Move of 1 tile 
+    /// </summary>
+    /// <param name="currentPos">Player current position</param>
+    /// <param name="EvaluatorBoard">The current player's vision of the board</param>
+    /// <returns>The tile to go onto</returns>
     private Vector2 Move(Vector2 currentPos, Card[,] EvaluatorBoard)
     {
         int[] xAvailableDirections = new int[] { -1, 0, 1 };
         int[] yAvailableDirections = new int[] { -1, 0, 1 };
-        Vector2 direction = new Vector2();
+        Vector2 direction = new Vector2(); // The direction to go to
 
         // Can't go on forbidden tiles
         if (EvaluatorBoard[(int)Position.x + 1, (int)Position.y] == Card.FORBIDDEN) // up
@@ -344,10 +356,15 @@ public class Evaluator
         }
         
         Vector2 tile = new Vector2(currentPos.x + direction.x, currentPos.y + direction.y);
-        return tile;        
+        return tile; // The tile to go onto
     }
 
-    // Choose a random available direction
+    /// <summary>
+    /// Choose a random available direction 
+    /// </summary>
+    /// <param name="xDir">Horizontal available directions</param>
+    /// <param name="yDir">Vertical available directions</param>
+    /// <returns>A direction to go to</returns>
     private Vector2 ChooseDirection(int[] xDir, int[] yDir)
     {
         bool directionChoosen = false;
@@ -372,11 +389,43 @@ public class Evaluator
         return direction;
     }
 
-    // Calculate distance between given 2 points
-    double calculDist(int x1, int y1, int x2, int y2)
+    /// <summary>
+    /// Calculate distance between 2 given tiles
+    /// </summary>
+    /// <param name="x1"></param>
+    /// <param name="y1"></param>
+    /// <param name="x2"></param>
+    /// <param name="y2"></param>
+    /// <returns>The distance calculated (in number of tile)</returns>
+    private double CalculDist(int x1, int y1, int x2, int y2)
     {
         double distance = Mathf.Sqrt(((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
         return System.Math.Ceiling(distance);
+    }
+
+    /// <summary>
+    /// Return how many turn and action point are used to get the piece 
+    /// </summary>
+    /// <param name="dist">The distance between the player and the piece (in number of tile)</param>
+    /// <param name="ap">Action points availables</param>
+    /// <returns>[0] : number of additional turn needed / [1] : Action points left</returns>
+    private int[] GoFindPiece(double dist, int ap)
+    {
+        int actionPoints = -ap + 1; // Get the piece
+        for(int i=0; i<dist; i++)
+        {
+            actionPoints += 2; // Move to get the piece and go back
+        }
+
+        int nbTurn = 2;
+        if (actionPoints < 0) nbTurn = 0;
+        else if (actionPoints < 4) nbTurn = 1;
+
+        if (nbTurn == 0) actionPoints = System.Math.Abs(actionPoints);
+        else if (nbTurn == 1) actionPoints = 4 - actionPoints;
+
+        // Debug.Log("turn sup = " + nbTurn + " / ac left = " + actionPoints);
+        return new int[] { nbTurn, actionPoints };
     }
 
 
