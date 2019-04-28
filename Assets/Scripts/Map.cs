@@ -89,6 +89,8 @@ public class Map : MonoBehaviour
         if (win)																			// If it's a win
         {
             print("win!");
+            GameObject.Find("AccueilText").GetComponent<Text>().text = "You win";
+
             startedGame = false;															// Game ends
 			sandBlocksLeft = 40;															// Reset stockpile
 			difficulty = 1;																	// Reset difficulty
@@ -104,11 +106,14 @@ public class Map : MonoBehaviour
 			Camera newPos = Camera.allCameras[0];											// Moving the camera
 			newPos.transform.Translate(new Vector3(0, 6, 0));
 			Camera.allCameras[0] = newPos;
+
             infoComponent.text = INFO_DEFAULT_VALUE;
         }
         else
         {
             print("loose!");
+            GameObject.Find("AccueilText").GetComponent<Text>().text = "You lost";
+
             startedGame = false;															// Game ends
 			sandBlocksLeft = 40;															// Reset stockpile
 			difficulty = 1;																	// Reset difficulty
@@ -124,6 +129,7 @@ public class Map : MonoBehaviour
 			Camera newPos = Camera.allCameras[0];											// Moving the camera
 			newPos.transform.Translate(new Vector3(0, 6, 0));
 			Camera.allCameras[0] = newPos;
+
             infoComponent.text = INFO_DEFAULT_VALUE;
         }
     }
