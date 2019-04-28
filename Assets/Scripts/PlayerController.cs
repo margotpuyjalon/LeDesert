@@ -111,14 +111,14 @@ public class PlayerController : MonoBehaviour
 	{
 		if (actionPoints != 0)														// If the player can act
 		{
-			if (GetStandingTile().GetComponent<Tile>().nbSandBlocks != 0)			// And if the tile has sand on it
-			{
-				GetStandingTile().GetComponent<Tile>().RemoveSandblock();			// Then Remove one block on it
-				GameObject.Find("Tilemap").GetComponent<Map>().sandBlocksLeft++;	// Add the removed block to the block stockpile
-				actionPoints--;                                                     // Use one action point
-				actionPointTextbox.text = "Action Points : " + actionPoints;        // Set the textbox
-			}
-			else print("Cannot dig here !");
+            if (GetStandingTile().GetComponent<Tile>().nbSandBlocks != 0)           // And if the tile has sand on it
+            {
+                GetStandingTile().GetComponent<Tile>().RemoveSandblock();           // Then Remove one block on it
+                GameObject.Find("Tilemap").GetComponent<Map>().sandBlocksLeft++;    // Add the removed block to the block stockpile
+                actionPoints--;                                                     // Use one action point
+                actionPointTextbox.text = "Action Points : " + actionPoints;        // Set the textbox
+            }
+            else GameObject.Find("InfoTextBox").GetComponent<Text>().text = "Cannot dig here !"; print("Cannot dig here !");
 		}
 	}
 
@@ -175,33 +175,33 @@ public class PlayerController : MonoBehaviour
 		pieces.Add(GameObject.Find("greenPiece"));
 		pieces.Add(GameObject.Find("redPiece"));
 		pieces.Add(GameObject.Find("purplePiece"));
-		
-		
-		if (actionPoints != 0)																										// If the player can act,
-		{
-			if (GetStandingTile().nbSandBlocks == 0)																				// If the tile have no sand on it
-			{
-				if (GetStandingTile().isDiscovered)																					// And if it has been discovered,
-				{
-					foreach (GameObject piece in pieces)																			// Then check the piece to grab
-					{
-						if (piece.transform.position.x == transform.position.x && piece.transform.position.y == transform.position.y) // by matching positions
-						{										
-							if (piece.name == "bluePiece") piece1 = true;															// Get the right piece
-							if (piece.name == "greenPiece") piece2 = true;
-							if (piece.name == "redPiece") piece3 = true;
-							if (piece.name == "purplePiece") piece4 = true;
-							piece.transform.Translate(1000, 0, 0);																	// Translate it away from the map
-							actionPoints--;                                                                                         // Use one action point
-							actionPointTextbox.text = "Action Points : " + actionPoints;                                            // Set the textbox
-						}
-					}
-				}
-				else print("I have to discover the tile first !");
-			}
-			else print("Too much sand ! I have to dig the tile first.");
-		}
-		else print("Cannot act anymore this turn...");
+
+
+        if (actionPoints != 0)                                                                                                      // If the player can act,
+        {
+            if (GetStandingTile().nbSandBlocks == 0)                                                                                // If the tile have no sand on it
+            {
+                if (GetStandingTile().isDiscovered)                                                                                 // And if it has been discovered,
+                {
+                    foreach (GameObject piece in pieces)                                                                            // Then check the piece to grab
+                    {
+                        if (piece.transform.position.x == transform.position.x && piece.transform.position.y == transform.position.y) // by matching positions
+                        {
+                            if (piece.name == "bluePiece") piece1 = true;                                                           // Get the right piece
+                            if (piece.name == "greenPiece") piece2 = true;
+                            if (piece.name == "redPiece") piece3 = true;
+                            if (piece.name == "purplePiece") piece4 = true;
+                            piece.transform.Translate(1000, 0, 0);                                                                  // Translate it away from the map
+                            actionPoints--;                                                                                         // Use one action point
+                            actionPointTextbox.text = "Action Points : " + actionPoints;                                            // Set the textbox
+                        }
+                    }
+                }
+                else GameObject.Find("InfoTextBox").GetComponent<Text>().text = "I have to discover the tile first !"; print("I have to discover the tile first !");
+            }
+            else GameObject.Find("InfoTextBox").GetComponent<Text>().text = "Too much sand ! I have to dig the tile first."; print("Too much sand ! I have to dig the tile first.");
+        }
+        else GameObject.Find("InfoTextBox").GetComponent<Text>().text = "Cannot act anymore this turn..."; print("Cannot act anymore this turn...");
 	}
 
 	// Use an item (ITEMS NOT IMPLEMENTED)
