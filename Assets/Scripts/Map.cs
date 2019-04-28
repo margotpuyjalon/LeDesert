@@ -32,6 +32,10 @@ public class Map : MonoBehaviour
     public int sandBlocksLeft = 40;
 	// Boolean to check is the game has started
 	public bool startedGame = false;
+    //
+    GameObject tileEndGo;
+    // Instance of player
+    PlayerController player;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +44,8 @@ public class Map : MonoBehaviour
         typeMapGenerator = new MapGenerator();      // Get a new instance of map generator
         infoComponent = GameObject.Find("InfoTextBox").GetComponent<Text>();
         infoComponent.text = INFO_DEFAULT_VALUE;
+
+        player = GameObject.Find("player").GetComponent<PlayerController>();
     }
 
     // Update is called once per fram
@@ -51,7 +57,14 @@ public class Map : MonoBehaviour
 			&&(  sandBlocksLeft == 0														// If the stockpile is empty,
 			||	GameObject.Find("player").GetComponent<PlayerController>().hitPoints == 0	// If the player has no life
 			||	(difficulty > 15)))															// And if the game's difficulty reached 15
-        {EndGame(false);}																	// Then end the game
+        { EndGame(false); }																	// Then loose the game
+
+        if (player.piece1 && player.piece2 && player.piece3 && player.piece4
+            && player.transform.position.x == tileEndGo.transform.position.x && player.transform.position.y == tileEndGo.transform.position.y
+            && tileEndGo.GetComponent<Tile>().isDiscovered && tileEndGo.GetComponent<Tile>().nbSandBlocks == 0)
+        {
+            EndGame(true);
+        }
     }
 
 	// Start game actions
@@ -59,14 +72,16 @@ public class Map : MonoBehaviour
 	{
 		deck = new DeckManager();																				// Get new instance of a storm deck
 		typesMap = typeMapGenerator.GetMap(5, 5);																// Get a new map, ready to be displayed
-		startedGame = true;																						// The game started
+        startedGame = true;																						// The game started
 		Camera newPos = Camera.allCameras[0];																	// Moving the camera
 		newPos.transform.Translate(new Vector3(0, -6, 0));
 		Camera.allCameras[0] = newPos;
 		DisplayMap(5, 5);																						// Display generated map
-		GameObject.Find("player").transform.position = GameObject.Find("Tile_start(Clone)").transform.position;	// Move the player in the starting tile
-		GameObject.Find("player").transform.Translate(0, 0, -2);												// Then move it to the starting 
-	}
+        tileEndGo = GameObject.Find("Tile_end(Clone)");
+        GameObject.Find("player").transform.position = GameObject.Find("Tile_start(Clone)").transform.position;	// Move the player in the starting tile
+		GameObject.Find("player").transform.Translate(0, 0, -2);												// Then move it to the starting
+        
+    }
 
     // End game actions
     void EndGame(bool win)
