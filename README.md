@@ -25,6 +25,7 @@ Il découvre chaque tuile sur laquelle il se trouve si elle ne l'est pas déjà.
 
 On compte le nombre de tour qu'il faut à ce joueur pour remplir les conditions de victoire :
  - découvrir tous les indices
+ - récolter toutes les pièces
  - découvrir la fin 
 
 On sélectionne la carte avec un nombre de tour moyen sur toutes les cartes testées.

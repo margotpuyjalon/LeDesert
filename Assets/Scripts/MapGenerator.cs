@@ -23,18 +23,17 @@ public enum Type
 
 public class MapGenerator
 {
-    private const int NB_MAP_TO_CREATE = 100;
-    private const int NB_MAP_TO_EVAL = 10;
-    private const int NB_TEST_PER_MAP = 3;
+    private const int NB_MAP_TO_CREATE = 1000;
+    private const int NB_MAP_TO_TEST = 10;
 
     // Create n basic map
-    void CreateNewMaps(int n, List<EvaluatedMap> map)
+    void CreateNewMaps(int n, List<EvaluatedMap> listMap)
     {
         for (int i = 0; i < n; i++)
         {
-            map.Add(
+            listMap.Add(
                 new EvaluatedMap(
-                    new Type[,] //TOFIX : POUVOIR SAISIR LA TAILLE DU TABLEAU DYNAMIQUEMENT
+                    new Type[,] //TO FIX : POUVOIR SAISIR LA TAILLE DU TABLEAU DYNAMIQUEMENT
                     {
                         {
                             Type.SOURCE,
@@ -59,7 +58,7 @@ public class MapGenerator
                         {
                             Type.TECH, Type.TECH, Type.TECH, Type.TECH, Type.TECH
                         }
-                    }));
+                    }, 5, 5));
         }
     }
 
@@ -85,14 +84,14 @@ public class MapGenerator
 
     // EvaluatedMap comparer
     // The best map has got the lowest score
-    private static int MapComparator (EvaluatedMap x, EvaluatedMap y)
+    private static int MapComparator (EvaluatedMap a, EvaluatedMap b)
     {
         int comparison = 0;
         // x Eval too high
-        if (x.Eval > y.Eval)
+        if (a.Mark > b.Mark)
             comparison = 1;
         // good
-        else if (y.Eval > x.Eval)
+        else if (b.Mark > a.Mark)
             comparison = -1;
         return comparison;
     }
@@ -102,39 +101,41 @@ public class MapGenerator
     public Type[,] GetMap(int x, int y)
     {
         List<EvaluatedMap> mapList = new List<EvaluatedMap>();
-        PlayerEvaluator player = new PlayerEvaluator(4, x, y);
-        MapEvaluator evaluator = new MapEvaluator();
+        Evaluator player = new Evaluator(4);       
         System.Random rnd = new System.Random(5);
 
-        CreateNewMaps(NB_MAP_TO_CREATE, mapList);
+        CreateNewMaps(NB_MAP_TO_CREATE, mapList); // TO FIX : create map dynamically
 
         // First evaluation
         foreach (EvaluatedMap m in mapList)
         {
             ShuffleTiles(m.TypesMap, rnd);  // Mutate the map
-            evaluator.EvaluateForbiddenMap(m, x, y); // Give a mark according to piles positions
+            player.InitMapKnowledge(m);
+            player.EvaluateMap(m); // Give a mark according to piles positions
         }
         mapList.Sort(MapComparator);
 
         // Deep evaluation on the bests maps
         int averageNbTurn = 0;
-        for (int i=0; i<NB_MAP_TO_EVAL; i++)
+        for (int i=0; i< NB_MAP_TO_TEST; i++)
         {
-            player.TestMap(mapList[i], NB_TEST_PER_MAP); // Give a mark according to number of turns before success or fail
+            player.TestMap(mapList[i]); // Give a mark according to number of turns before success or fail
             averageNbTurn += mapList[i].NbTurns;
         }
-        averageNbTurn = averageNbTurn / NB_MAP_TO_EVAL;
+        averageNbTurn = averageNbTurn / NB_MAP_TO_TEST;
 
-        for(int i=0; i< NB_MAP_TO_EVAL; i++)Display(mapList[i], x, y);
-        return mapList.Find(
-            m => m.NbTurns > (averageNbTurn - 2) 
-            && m.NbTurns < (averageNbTurn + 2)).TypesMap; // Return the best map
+        // for(int i=0; i< NB_MAP_TO_TEST; i++)Display(mapList[i], x, y);
+        EvaluatedMap theMap = mapList.Find(
+            m => m.NbTurns > (averageNbTurn - 2)
+            && m.NbTurns < (averageNbTurn + 2));
+        Display(theMap, 5, 5);
+        return theMap.TypesMap; // Return the best map
     }
 
     // FOR DEBUG
     void Display(EvaluatedMap m, int x, int y)
     {
-        string msg = "map e = " + m.Eval + " et nbT = " + m.NbTurns + "\n";
+        string msg = "map e = " + m.Mark + " et nbT = " + m.NbTurns + "\n";
         for (int i = 0; i < x; i++)
         {
             for (int j = 0; j < y; j++)

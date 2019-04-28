@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Tiles from the evaluator view
+/// </summary>
 public enum Card
 {
     FORBIDDEN,
@@ -9,93 +12,284 @@ public enum Card
     DISCOVERED
     
 }
-
+/// <summary>
+/// The map used for evaluations and tests 
+/// </summary>
 public class EvaluatedMap
 {
-    public Type[,] TypesMap { get; set; }
-    public int Eval { get; set; }
-    public int NbTurns { get; set; }
+    public Type[,] TypesMap;
+    public Card[,] EvaluatorBoard;
+    public int Mark;
+    public int NbTurns;
+    public int X, Y;
+    public Vector2 Start;
+    public Vector2 Piece1, Piece2, Piece3, Piece4;
+    public Vector2 Tunnel1, Tunnel2;
+    public Vector2 Storm;
 
-    public EvaluatedMap(Type[,] t)
+    public EvaluatedMap(Type[,] t, int x, int y)
     {
         TypesMap = t;
-        Eval = 0;
+        EvaluatorBoard = new Card[x + 2, y + 2];
+        Mark = 0;
         NbTurns = 0;
+        X = x; Y = y;
+        Start = new Vector2(0, 0);
+        Piece1 = new Vector2(0, 0);
+        Piece2 = new Vector2(0, 0);
+        Piece3 = new Vector2(0, 0);
+        Piece4 = new Vector2(0, 0);
+        Tunnel1 = new Vector2(0, 0);
+        Tunnel2 = new Vector2(0, 0);
+        Storm = new Vector2(0, 0);
     }
 }
 
-public class MapEvaluator
+/// <summary>
+/// A bot which performs tests and evaluations on an EvaluatedMap
+/// </summary>
+public class Evaluator
 {
-    // Evaluate forbidden composition of map
-    public void EvaluateForbiddenMap(EvaluatedMap map, int x, int y)
+    int ActionPoints;
+    Vector2 Position;
+
+    public Evaluator(int nbActions)
+    {
+        ActionPoints = nbActions;
+        Position = new Vector2(0, 0);
+    }
+
+    /// <summary>
+    /// Initialize the evaluator's given map knowledge.
+    /// Must be called before any evaluation or test of an EvaluatedMap.
+    /// </summary>
+    /// <param name="map">The map that will be evaluated</param>
+    public void InitMapKnowledge(EvaluatedMap map)
     {
         bool firstTunnelFound = false;
 
-        // Initialize positions to avoid conflics with true positions
-        int hp1 = -1, vp1 = -1,
-            hp2 = -2, vp2 = -2,
-            hp3 = -3, vp3 = -3,
-            hp4 = -4, vp4 = -4,
-            t1i = -5, t1j = -5,
-            t2i = -6, t2j = -6;
-
         // Run through all tiles
-        for (int j = 0; j < y; j++)
+        for (int j = 0; j < map.Y; j++)
         {
-            for (int i = 0; i < x; i++)
+            for (int i = 0; i < map.X; i++)
             {
                 Type current = map.TypesMap[i, j];
-                // Check if the storm is on a border
-                if ((i == 0
-                    || i == x - 1
-                    || j == 0
-                    || j == y - 1)
-                    && current == Type.STORM)
-                {
-                    map.Eval += 20;
-                }
 
-                // Get clue location for ship's pieces
-                if (current == Type.HP1) hp1 = i;
-                else if (current == Type.VP1) vp1 = j;
-                else if (current == Type.HP2) hp2 = i;
-                else if (current == Type.VP2) vp2 = j;
-                else if (current == Type.HP3) hp3 = i;
-                else if (current == Type.VP3) vp3 = j;
-                else if (current == Type.HP4) hp4 = i;
-                else if (current == Type.VP4) vp4 = j;
+                // Set the forbidden tiles
+                map.EvaluatorBoard[i + 1, j + 1] = Card.HIDDEN;
+
+                // Get the storm location
+                if (current == Type.STORM)
+                {
+                    map.Storm.Set(i,j);
+                    map.EvaluatorBoard[i + 1, j + 1] = Card.FORBIDDEN;
+                }
+                // Get clue locations for pieces
+                else if (current == Type.HP1) map.Piece1.x = i;
+                else if (current == Type.VP1) map.Piece1.y = j;
+                else if (current == Type.HP2) map.Piece2.x = i;
+                else if (current == Type.VP2) map.Piece2.y = j;
+                else if (current == Type.HP3) map.Piece3.x = i;
+                else if (current == Type.VP3) map.Piece3.y = j;
+                else if (current == Type.HP4) map.Piece4.x = i;
+                else if (current == Type.VP4) map.Piece4.y = j;
                 // Get 2 fisrt tunnels locations
                 else if (current == Type.TUNNEL && !firstTunnelFound)
                 {
-                    t1i = i; t1j = j;
+                    map.Tunnel1.Set(i,j);
                     firstTunnelFound = true;
                 }
-                else if (current == Type.TUNNEL)
-                {
-                    t2i = i; t2j = j;
-                }
+                else if (current == Type.TUNNEL) map.Tunnel2.Set(i, j);
+                // Get the start location
+                else if (current == Type.START) map.Start.Set(i, j);
             }
         }
-
-        // Check if some ship's pieces are on the same tile
-        Vector2[] p = new Vector2[]
-        {
-            new Vector2( hp1, vp1 ),
-            new Vector2( hp2, vp2 ),
-            new Vector2( hp3, vp3 ),
-            new Vector2( hp4, vp4 )
-        };
-        if (ContainsDuplicates(p)) map.Eval += 30;
-
-        // Check if 2 tunnels are too close
-        if (t1i == t2i && ((t1j - t2j) == 1) || (t2j - t1j) == 1) map.Eval += 10; // same column
-        if (t1j == t2j && ((t1i - t2i) == 1) || (t2i - t1i) == 1) map.Eval += 10; // same row
-
-        // Debug.Log("Note map = " + map.Eval);
-
+        // Display(map.EvaluatorBoard, 7, 7);
     }
 
-    // Check duplicates in an array of Vectors
+    /// <summary>
+    /// Give a mark to the given EvaluatedMap from its composition of tiles
+    /// </summary>
+    /// <param name="map">The map to evaluate</param>
+    public void EvaluateMap(EvaluatedMap map)
+    {
+        // Check if the storm is on a border
+        if (map.Storm.x == 0
+            || map.Storm.x == map.X - 1
+            || map.Storm.y == 0
+            || map.Storm.y == map.Y - 1)
+        {
+            map.Mark += 20;
+        }
+        
+        // Check if some pieces are on the same tile
+        Vector2[] p = new Vector2[] { map.Piece1, map.Piece2, map.Piece3, map.Piece4 };
+        if (ContainsDuplicates(p)) map.Mark += 30;
+
+        // Check if 2 tunnels are too close
+        if (map.Tunnel1.x == map.Tunnel2.x // same column
+            && ((map.Tunnel1.y - map.Tunnel2.y) == 1) || (map.Tunnel2.y - map.Tunnel1.y) == 1)
+            map.Mark += 10;
+        if (map.Tunnel1.y == map.Tunnel2.y // same row
+            && ((map.Tunnel1.x - map.Tunnel2.x) == 1) || (map.Tunnel2.x - map.Tunnel1.x) == 1)
+            map.Mark += 10;
+
+        // Debug.Log("Note map = " + map.Mark);
+    }
+
+    /// <summary>
+    /// Simulate a game on the given EvaluatedMap and gives a mark according to specific criterias
+    /// </summary>
+    /// <param name="map">The map to test</param>
+    public void TestMap(EvaluatedMap map)
+    {
+        int nbTurns = 0;
+
+        // Set the player position on start
+        Position = map.Start;
+        // Debug.Log("START : x:" + Position.x + " y:" + Position.y);
+        // Play until victory
+        bool victory = false;
+        int[] clues = new int[8];
+        bool[] pieces = new bool[4];
+        bool end = false;
+        for (int j = 0; j < 1000; j++)
+        {
+            // Player time until no more ActionPoints
+            nbTurns++;
+            int ap = ActionPoints;
+            while (ap > 0)
+            {
+                // Display(EvaluatorBoard, 7, 7);
+
+                // VICTORY
+                if (pieces[0] && pieces[1] && pieces[2] && pieces[3] && end)
+                {
+                    victory = true;
+                    break;
+                }
+
+                // FIND PIECES
+                // 1
+                if (ap > 0 && clues[0] != 0 && clues[1] != 0 && !pieces[0])
+                {
+                    double dist = calculDist((int)Position.x, (int)Position.y, clues[0] - 1, clues[1] - 1);
+                    // Debug.Log("dist = " + dist);
+                    if (dist < 3)
+                    {
+                        ap--; // Use one action point to get the piece
+                        pieces[0] = true;
+                        // Debug.Log("FIND PIECE 1");
+                    }
+                }
+                // 2
+                if (ap > 0 && clues[2] != 0 && clues[3] != 0 && !pieces[1])
+                {
+                    double dist = calculDist((int)Position.x, (int)Position.y, clues[2] - 1, clues[3] - 1);
+                    // Debug.Log("dist = " + dist);
+                    if (dist < 3)
+                    {
+                        ap--; // Use one action point to get the piece
+                        pieces[1] = true;
+                        // Debug.Log("FIND PIECE 2");
+                    }
+                }
+                // 3
+                if (ap > 0 && clues[4] != 0 && clues[5] != 0 && !pieces[2])
+                {
+                    double dist = calculDist((int)Position.x, (int)Position.y, clues[4] - 1, clues[5] - 1);
+                    // Debug.Log("dist = " + dist);
+                    if (dist < 3)
+                    {
+                        ap--; // Use one action point to get the piece
+                        pieces[2] = true;
+                        // Debug.Log("FIND PIECE 3");
+                    }
+                }
+                // 4
+                if (ap > 0 && clues[6] != 0 && clues[7] != 0 && !pieces[3])
+                {
+                    double dist = calculDist((int)Position.x, (int)Position.y, clues[6] - 1, clues[7] - 1);
+                    // Debug.Log("dist = " + dist);
+                    if (dist < 3)
+                    {
+                        ap--; // Use one action point to get the piece
+                        pieces[3] = true;
+                        // Debug.Log("FIND PIECE 4");
+                    }
+                }
+
+                // DISCOVER the tile under if not already discovered
+                if (ap > 0 && map.EvaluatorBoard[(int)Position.x + 1, (int)Position.y + 1] == Card.HIDDEN)
+                {
+                    ap--; // Use one action point to discover
+                    int vertical = (int)Position.x + 1;
+                    int horizontal = (int)Position.y + 1;
+                    map.EvaluatorBoard[vertical, horizontal] = Card.DISCOVERED;
+                    // Debug.Log("DISC : ap = " + ap + " / tile : x:" + Position.x + " y:" + Position.y);
+                    // Check the discovered tile
+                    Type tile = map.TypesMap[(int)Position.x, (int)Position.y];
+                    switch (tile)
+                    {
+                        case Type.END:
+                            end = true;
+                            break;
+                        case Type.HP1:
+                            clues[0] = horizontal;
+                            break;
+                        case Type.VP1:
+                            clues[1] = vertical;
+                            break;
+                        case Type.HP2:
+                            clues[2] = horizontal;
+                            break;
+                        case Type.VP2:
+                            clues[3] = vertical;
+                            break;
+                        case Type.HP3:
+                            clues[4] = horizontal;
+                            break;
+                        case Type.VP3:
+                            clues[5] = vertical;
+                            break;
+                        case Type.HP4:
+                            clues[6] = horizontal;
+                            break;
+                        case Type.VP4:
+                            clues[7] = vertical;
+                            break;
+                    }
+                }
+
+                // MOVE
+                if (ap > 0)
+                {
+                    ap--; // Use one action point to move
+                    Vector2 moveTo = Move(Position, map.EvaluatorBoard);
+                    Position = new Vector2(moveTo.x, moveTo.y);
+                    // Debug.Log("MOVE : ap = " + ap + " / tile : x:" + Position.x + " y:" + Position.y);
+                }
+            }
+            if (victory) break;
+            // Tornado time
+            if (j == 999) Debug.Log("OUT OF TIME FOR VICTORY");
+
+            // Debug.Log("nbTurns : " + nbTurns);
+        }
+        // Number of turns needed to win the map
+        map.NbTurns = nbTurns;
+        // Debug.Log("map tunrs : " + map.NbTurns);
+    }
+
+    //*********************************************************************************************//
+    //**************************          PRIVATE FUNCTIONS           *****************************//
+    //*********************************************************************************************//
+
+    /// <summary>
+    /// Check duplicates in an array of Vectors
+    /// </summary>
+    /// <param name="a">An array of Vector2 to compare</param>
+    /// <returns>True if duplicates found</returns>
     private bool ContainsDuplicates(Vector2[] a)
     {
         for (int i = 0; i < a.Length; i++)
@@ -107,170 +301,41 @@ public class MapEvaluator
         }
         return false;
     }
-}
-
-public class PlayerEvaluator
-{
-    Vector2 Position { get; set; }
-    int ActionPoints { get; set; }
-    Card[,] PlayerBoard { get; set; }
-    int X, Y; // Map's size
-
-    public PlayerEvaluator(int nbActions, int x, int y)
-    {
-        Position = new Vector2(0, 0);
-        ActionPoints = nbActions;
-        PlayerBoard = new Card[x + 2, y + 2];
-        X = x; Y = y;
-    }
-
-    // Simulate a game on the map
-    public void TestMap(EvaluatedMap map, int nbTimes)
-    {
-        int nbTurns = 0;
-
-        // Testting the map nbTimes times
-        for (int k = 0; k < nbTimes; k++)
-        {
-            // Debug.Log("TEST MAP: "+k);
-            Vector2 start = new Vector2();
-            
-
-            // Run through all tiles
-            for (int j = 0; j < Y; j++)
-            {
-                for (int i = 0; i < X; i++)
-                {
-                    Type current = map.TypesMap[i, j];
-
-                    // Get the start location
-                    if (current == Type.START) start.Set(i, j);
-
-                    // Set the forbidden tiles
-                    PlayerBoard[i + 1, j + 1] = Card.HIDDEN;
-                    if (current == Type.STORM) PlayerBoard[i + 1, j + 1] = Card.FORBIDDEN;
-                }
-            }
-
-            // Set the player position on start
-            Position = start;
-            // Debug.Log("START : x:" + Position.x + " y:" + Position.y);
-            // Play until victory
-            // Have to find all clues and the end to win
-            bool victory = false;
-            bool[] clues = new bool[8];
-            bool end = false;
-            for (int j=0; j<1000; j++)
-            {
-                // Player time until no more ActionPoints
-                nbTurns++;
-                int ap = ActionPoints;
-                while (ap > 0)
-                {
-                    // Display(PlayerBoard, 7, 7);
-
-                    // DISCOVER the tile under if not already discovered
-                    // And check the discovered tile
-                    Type tile = map.TypesMap[(int)Position.x, (int)Position.y];
-                    if (ap > 0 && PlayerBoard[(int)Position.x + 1, (int)Position.y + 1] == Card.HIDDEN)
-                    {
-                        ap--; // Use one action point to discover
-                        // Debug.Log("DISC : ap = " + ap + " / tile : x:" + Position.x + " y:" + Position.y);
-                        PlayerBoard[(int)Position.x + 1, (int)Position.y + 1] = Card.DISCOVERED;
-                        switch (tile)
-                        {
-                            case Type.END:
-                                end = true;
-                                break;
-                            case Type.HP1:
-                                clues[0] = true;
-                                break;
-                            case Type.VP1:
-                                clues[1] = true;
-                                break;
-                            case Type.HP2:
-                                clues[2] = true;
-                                break;
-                            case Type.VP2:
-                                clues[3] = true;
-                                break;
-                            case Type.HP3:
-                                clues[4] = true;
-                                break;
-                            case Type.VP3:
-                                clues[5] = true;
-                                break;
-                            case Type.HP4:
-                                clues[6] = true;
-                                break;
-                            case Type.VP4:
-                                clues[7] = true;
-                                break;
-                        }
-                    }
-                    if (clues[0] && clues[1] && clues[2] && clues[3] &&
-                        clues[4] && clues[5] && clues[6] && clues[7] && end)
-                    {
-                        victory = true;
-                    }
-
-                    // MOVE
-                    if (ap > 0)
-                    {
-                        ap--; // Use one action point to move
-                        Vector2 moveTo = Move(Position, PlayerBoard);
-                        Position = new Vector2(moveTo.x, moveTo.y);
-                        // Debug.Log("MOVE : ap = " + ap + " / tile : x:" + Position.x + " y:" + Position.y);
-                    }
-
-                    if (victory) break;
-                }
-                if (victory) break;
-                if (j == 999) Debug.Log("OUT OF TIME FOR VICTORY");
-                // Tornado time
-            }
-            // Debug.Log("nbTurns : " + nbTurns);
-        }
-
-        // Average nuber of turns needed to win the map
-        map.NbTurns = nbTurns / nbTimes;
-        // Debug.Log("map tunrs : " + map.NbTurns);
-    }
 
     // Move of 1 tile
-    private Vector2 Move(Vector2 currentPos, Card[,] playerBoard)
+    private Vector2 Move(Vector2 currentPos, Card[,] EvaluatorBoard)
     {
         int[] xAvailableDirections = new int[] { -1, 0, 1 };
         int[] yAvailableDirections = new int[] { -1, 0, 1 };
         Vector2 direction = new Vector2();
 
         // Can't go on forbidden tiles
-        if (playerBoard[(int)Position.x + 1, (int)Position.y] == Card.FORBIDDEN) // haut
+        if (EvaluatorBoard[(int)Position.x + 1, (int)Position.y] == Card.FORBIDDEN) // up
             yAvailableDirections[0] = 0;
-        if (playerBoard[(int)Position.x + 1, (int)Position.y + 2] == Card.FORBIDDEN) // bas
+        if (EvaluatorBoard[(int)Position.x + 1, (int)Position.y + 2] == Card.FORBIDDEN) // down
             yAvailableDirections[2] = 0;
-        if (playerBoard[(int)Position.x, (int)Position.y + 1] == Card.FORBIDDEN) // gauche
+        if (EvaluatorBoard[(int)Position.x, (int)Position.y + 1] == Card.FORBIDDEN) // left
             xAvailableDirections[0] = 0;
-        if (playerBoard[(int)Position.x + 2, (int)Position.y + 1] == Card.FORBIDDEN) // droite
+        if (EvaluatorBoard[(int)Position.x + 2, (int)Position.y + 1] == Card.FORBIDDEN) // right
             xAvailableDirections[2] = 0;
 
         // Debug.Log("x dir : " + xAvailableDirections[0] + ", " + xAvailableDirections[1] + ", " + xAvailableDirections[2] + "\n"
         //    + "y dir : " + yAvailableDirections[0] + ", " + yAvailableDirections[1] + ", " + yAvailableDirections[2]);
 
         // Prioritizes hidden tiles
-        if (playerBoard[(int)Position.x + 1, (int)Position.y] == Card.HIDDEN) // haut
+        if (EvaluatorBoard[(int)Position.x + 1, (int)Position.y] == Card.HIDDEN) // haut
         { direction.x = 0; direction.y = -1; }
         else
         {
-            if (playerBoard[(int)Position.x + 2, (int)Position.y + 1] == Card.HIDDEN) // droite
+            if (EvaluatorBoard[(int)Position.x + 2, (int)Position.y + 1] == Card.HIDDEN) // droite
             { direction.x = 1; direction.y = 0; }
             else
             {
-                if (playerBoard[(int)Position.x + 1, (int)Position.y + 2] == Card.HIDDEN) // bas
+                if (EvaluatorBoard[(int)Position.x + 1, (int)Position.y + 2] == Card.HIDDEN) // bas
                 { direction.x = 0; direction.y = 1; }
                 else
                 {
-                    if (playerBoard[(int)Position.x, (int)Position.y + 1] == Card.HIDDEN) // gauche
+                    if (EvaluatorBoard[(int)Position.x, (int)Position.y + 1] == Card.HIDDEN) // gauche
                     { direction.x = -1; direction.y = 0; }
                     else
                         direction = ChooseDirection(xAvailableDirections, yAvailableDirections);
@@ -302,10 +367,18 @@ public class PlayerEvaluator
                 directionChoosen = true;
             }
             if (directionChoosen) break;
-            if (i == 999) Debug.Log("OUT OF TIME !");
+            if (i == 999) Debug.Log("OUT OF TIME TO MOVE!");
         }
         return direction;
     }
+
+    // Calculate distance between given 2 points
+    double calculDist(int x1, int y1, int x2, int y2)
+    {
+        double distance = Mathf.Sqrt(((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
+        return System.Math.Ceiling(distance);
+    }
+
 
     // FOR DEBUG
     public void Display(Card[,] m, int x, int y)
