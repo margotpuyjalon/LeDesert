@@ -8,6 +8,8 @@ public class Map : MonoBehaviour
 	// Number of tile on play
     const int NB_TILE = 25;
     //
+    const int DIFFICULTY_MAX = 16;
+    //
     const string INFO_DEFAULT_VALUE = "Move with arrows on your keyboard !";
 
 	// Get instance of a map generator
@@ -16,9 +18,10 @@ public class Map : MonoBehaviour
     private Type[,] typesMap;
     // Component for information messages
     private Text infoComponent;
-	// Map difficulty
+    // Component for difficulty message
+    private Text difficultyComponent;
+    // Map difficulty
     private int difficulty = 1;
-    private int difficulty_max = 16;
 
 	// Get instance of each different object of the game
     public GameObject Tile_tech, Tile_source, Tile_start, Tile_end, Tile_tunnel, Tile_storm,
@@ -33,7 +36,8 @@ public class Map : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-		typeMapGenerator = new MapGenerator();      // Get a new instance of map generator
+        difficultyComponent = GameObject.Find("DifficultyTextBox").GetComponent<Text>();
+        typeMapGenerator = new MapGenerator();      // Get a new instance of map generator
         infoComponent = GameObject.Find("InfoTextBox").GetComponent<Text>();
         infoComponent.text = INFO_DEFAULT_VALUE;
     }
@@ -41,7 +45,8 @@ public class Map : MonoBehaviour
     // Update is called once per fram
     void Update()
     {
-		// Check the loose conditions
+        difficultyComponent.text = "Difficulty : " + difficulty + " / " + DIFFICULTY_MAX;
+        // Check the loose conditions
         if (	startedGame
 			&&(  sandBlocksLeft == 0														// If the stockpile is empty,
 			||	GameObject.Find("player").GetComponent<PlayerController>().hitPoints == 0	// If the player has no life
@@ -269,8 +274,9 @@ public class Map : MonoBehaviour
     void ChangeDifficulty()
     {
         difficulty++;	// Up the difficlty of 1 level
-        print("Wow... Le vent devient encore plus violent, encore " + (difficulty_max - difficulty) + " fois et je vais y passer !");
-        infoComponent.text = "Wow... The wind is even more violent, " + (difficulty_max - difficulty) + " more times and I'll lose it !";
+        print("tours restants :" + (DIFFICULTY_MAX - difficulty));
+        infoComponent.text = "Wow... The wind is even more violent, " + (DIFFICULTY_MAX - difficulty) + " more times and I'll lose it !";
+
     }
 
 	// Display all discovered pieces, if their clues are also discovered
