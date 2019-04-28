@@ -103,6 +103,7 @@ public class PlayerController : MonoBehaviour
 	public void ChangeLife(int amount)
 	{
 		hitPoints += amount;									// Change player's life amount, thanks to the given amount
+        if (hitPoints > 4) { hitPoints = 4; }
 		hitPointTextbox.text = "Hit Points : " + hitPoints;     // Set the textbox
 	}
 
