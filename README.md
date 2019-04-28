@@ -12,12 +12,13 @@ Chaque tour, le joueur a 4 points d'actions. Pour 1 point, il peut :
   - retourner/découvrir la tuile où il se trouve
   - retirer une couche de sable de la tuile
   - ramasser une pièce qui se trouve sur la même tuile que lui
+  
 A la fin du tour, il pioche un certain nombre de cartes selon le niveau de difficulté :
-  - 1 pour une diffculté de 1 à 3
-  - 2 pour une diffculté de 4 à 6
-  - 3 pour une diffculté de 7 à 9
-  - 4 pour une diffculté de 10 à 12
-  - 5 pour une diffculté de 13 à 15
+  - 1 pour une difficulté de 1 à 3
+  - 2 pour une difficulté de 4 à 6
+  - 3 pour une difficulté de 7 à 9
+  - 4 pour une difficulté de 10 à 12
+  - 5 pour une difficulté de 13 à 15
 
  **L'objectif du joueur** est de ramasser les 4 pièces puis de se rendre sur la case de fin non ensevelie.
  **Le joueur perd** si ses points de vie tombent à 0 ou si le niveau de chaleur (la difficulté) arrive à son maximum (16).
