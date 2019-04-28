@@ -140,7 +140,7 @@ public class PlayerController : MonoBehaviour
 	}
 
 	// Get the tile where the player stands on
-	private Tile GetStandingTile()
+	public Tile GetStandingTile()
 	{
 		GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");	// get all inPlayTiles
 		foreach (GameObject tile in tiles)										// Get the tile where the player stands on

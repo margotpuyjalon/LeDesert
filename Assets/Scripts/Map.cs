@@ -71,7 +71,7 @@ public class Map : MonoBehaviour
 	public void NewGame()
 	{
 		deck = new DeckManager();																				// Get new instance of a storm deck
-		typesMap = typeMapGenerator.GetMap(5, 5); //!\\ must not change the map's size								// Get a new map, ready to be displayed
+		typesMap = typeMapGenerator.GetMap(5, 5); //!\\ must not change the map's size							// Get a new map, ready to be displayed
 		startedGame = true;																						// The game started
 		Camera newPos = Camera.allCameras[0];																	// Moving the camera
 		newPos.transform.Translate(new Vector3(0, -6, 0));
@@ -145,7 +145,9 @@ public class Map : MonoBehaviour
                     ChangeDifficulty();
                     break;
 				case (int)CardsType.HeatWave:                                   // Heat wave
-					playerGo.GetComponent<PlayerController>().ChangeLife(-1);		// Reduce player's life
+                    Tile t = playerGo.GetComponent<PlayerController>().GetStandingTile();
+                    if (t.type != (int)Type.TUNNEL)
+                        playerGo.GetComponent<PlayerController>().ChangeLife(-1);		// Reduce player's life
 					print("Argh...La chaleur augmente... ! " + "Points de vie restants : " + playerGo.GetComponent<PlayerController>().hitPoints);
                     infoComponent.text = "Argh...The heat increases... ! ";
 					break;
