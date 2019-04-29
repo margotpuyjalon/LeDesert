@@ -74,7 +74,7 @@ public class Map : MonoBehaviour
 		typesMap = typeMapGenerator.GetMap(5, 5); //!\\ must not change the map's size							// Get a new map, ready to be displayed
 		startedGame = true;																						// The game started
 		Camera newPos = Camera.allCameras[0];																	// Moving the camera
-		newPos.transform.Translate(new Vector3(0, -6, 0));
+		newPos.transform.Translate(new Vector3(0, -8.5f, 0));
 		Camera.allCameras[0] = newPos;
 		DisplayMap(5, 5);																						// Display generated map
         tileEndGo = GameObject.Find("Tile_end(Clone)");
@@ -104,7 +104,7 @@ public class Map : MonoBehaviour
 			GameObject.Find("greenPiece").transform.position = new Vector3(1000, 1000, 3);
 			GameObject.Find("purplePiece").transform.position = new Vector3(1000, 1000, 3);
 			Camera newPos = Camera.allCameras[0];											// Moving the camera
-			newPos.transform.Translate(new Vector3(0, 6, 0));
+			newPos.transform.Translate(new Vector3(0, 8.5f, 0));
 			Camera.allCameras[0] = newPos;
 
             infoComponent.text = INFO_DEFAULT_VALUE;
@@ -127,7 +127,7 @@ public class Map : MonoBehaviour
 			GameObject.Find("greenPiece").transform.position = new Vector3(1000, 1000, 3);
 			GameObject.Find("purplePiece").transform.position = new Vector3(1000, 1000, 3);
 			Camera newPos = Camera.allCameras[0];											// Moving the camera
-			newPos.transform.Translate(new Vector3(0, 6, 0));
+			newPos.transform.Translate(new Vector3(0, 8.5f, 0));
 			Camera.allCameras[0] = newPos;
 
             infoComponent.text = INFO_DEFAULT_VALUE;
