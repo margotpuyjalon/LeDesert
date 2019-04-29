@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public enum CardsType
 {
@@ -41,7 +42,10 @@ public class DeckManager {
     int nbMoveThreeToLeft = 2;
     int nbMoveThreeToRight = 2;
     int nbMoveThreeToTop = 2;
-    int nbMoveThreeToBot = 2; 
+    int nbMoveThreeToBot = 2;
+
+    // tableau de toutes les proba possible pour chaque type de cartes
+    List<int> probabilities = new List<int> { 3, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 };
 
     public DeckManager()
     {
@@ -80,14 +84,82 @@ public class DeckManager {
 
     public int PickNextCard()
     {
-        int cardToReturn = deck[indexToPick];
-        // Incrémentation pour la prochaine pioche
-        if (indexToPick == deck.Count - 1)
+        int cardToReturn;
+        bool doProcedural = false; // booléen à changer pour utiliser la méthode tabRand ou l'ancienne façon
+
+        if (doProcedural)
         {
-            indexToPick = 0;
-            Shuffle();
+            // méthode tabRand
+            int s = probabilities.Sum();
+            int n = Random.Range(0, s);
+            int choice = 0;
+            while (n - probabilities[choice] > 0)
+            {
+                n -= probabilities[choice];
+                choice++;
+            }
+            // puis tirer la bonne carte
+            switch (choice)
+            {
+                case 3:
+                    cardToReturn = (int)CardsType.HeatWave;
+                    break;
+                case 4:
+                    cardToReturn = (int)CardsType.DifficultyUp;
+                    break;
+                default: // 2
+                    int typeMovement = Random.Range(1, 12);
+                    switch (typeMovement)
+                    {
+                        case 1:
+                            cardToReturn = (int)CardsType.MoveOneToLeft;
+                            break;
+                        case 2:
+                            cardToReturn = (int)CardsType.MoveOneToRight;
+                            break;
+                        case 3:
+                            cardToReturn = (int)CardsType.MoveOneToTop;
+                            break;
+                        case 4:
+                            cardToReturn = (int)CardsType.MoveOneToBot;
+                            break;
+                        case 5:
+                            cardToReturn = (int)CardsType.MoveTwoToLeft;
+                            break;
+                        case 6:
+                            cardToReturn = (int)CardsType.MoveTwoToRight;
+                            break;
+                        case 7:
+                            cardToReturn = (int)CardsType.MoveTwoToTop;
+                            break;
+                        case 8:
+                            cardToReturn = (int)CardsType.MoveTwoToBot;
+                            break;
+                        case 9:
+                            cardToReturn = (int)CardsType.MoveThreeToLeft;
+                            break;
+                        case 10:
+                            cardToReturn = (int)CardsType.MoveThreeToRight;
+                            break;
+                        case 11:
+                            cardToReturn = (int)CardsType.MoveThreeToTop;
+                            break;
+                        default:
+                            cardToReturn = (int)CardsType.MoveThreeToBot;
+                            break;
+                    }
+                    break;
+            }       
+        } else {
+            cardToReturn = deck[indexToPick];
+            // Incrémentation pour la prochaine pioche
+            if (indexToPick == deck.Count - 1)
+            {
+                indexToPick = 0;
+                Shuffle();
+            }
+            else { indexToPick++; }
         }
-        else { indexToPick++; }  
 
         return cardToReturn;
     }
