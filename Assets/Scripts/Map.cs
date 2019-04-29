@@ -10,7 +10,7 @@ public class Map : MonoBehaviour
     //
     const int DIFFICULTY_MAX = 16;
     //
-    const string INFO_DEFAULT_VALUE = "Move with arrows on your keyboard !";
+    const string INFO_DEFAULT_VALUE = "Move with arrows on your keyboard ! \n";
 
 	// Get instance of a map generator
     private MapGenerator typeMapGenerator;
@@ -137,6 +137,9 @@ public class Map : MonoBehaviour
 	// End turn actions
     public void NextTurn()
     {
+        print("---");
+        infoComponent.text = "";
+
         GameObject[] tiles = GameObject.FindGameObjectsWithTag("InPlayTile");	// Get all tiles in play
         GameObject objStorm = GameObject.Find("Tile_storm(Clone)");				// Get the Storm object
 
@@ -155,7 +158,7 @@ public class Map : MonoBehaviour
                     if (t.type != (int)Type.TUNNEL)
                         playerGo.GetComponent<PlayerController>().ChangeLife(-1);		// Reduce player's life
 					print("Argh...La chaleur augmente... ! " + "Points de vie restants : " + playerGo.GetComponent<PlayerController>().hitPoints);
-                    infoComponent.text = "Argh...The heat increases... ! ";
+                    infoComponent.text += "Argh...The heat increases... ! \n";
 					break;
 				case (int)CardsType.MoveOneToBot:								// Move the Storm 1 tile down
                     SwitchTiles(0, -1, 1);
@@ -197,7 +200,6 @@ public class Map : MonoBehaviour
                     break;
             }
         }
-        print("---");
         playerGo.GetComponent<PlayerController>().ResetActionPoints();				// Then set the player's action points to 4
     }
 
@@ -296,7 +298,7 @@ public class Map : MonoBehaviour
     {
         difficulty++;	// Up the difficlty of 1 level
         print("tours restants :" + (DIFFICULTY_MAX - difficulty));
-        infoComponent.text = "Wow... The wind is even more violent, " + (DIFFICULTY_MAX - difficulty) + " more times and I'll lose it !";
+        infoComponent.text = "Wow... The wind is even more violent, " + (DIFFICULTY_MAX - difficulty) + " more times and I'll lose it ! \n";
 
     }
 

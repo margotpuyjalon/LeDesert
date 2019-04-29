@@ -119,7 +119,7 @@ public class PlayerController : MonoBehaviour
                 actionPoints--;                                                     // Use one action point
                 actionPointTextbox.text = "Action Points : " + actionPoints;        // Set the textbox
             }
-            else GameObject.Find("InfoTextBox").GetComponent<Text>().text = "Cannot dig here !"; print("Cannot dig here !");
+            else GameObject.Find("InfoTextBox").GetComponent<Text>().text = "Cannot dig here ! \n"; print("Cannot dig here !");
 		}
 	}
 
@@ -198,11 +198,11 @@ public class PlayerController : MonoBehaviour
                         }
                     }
                 }
-                else GameObject.Find("InfoTextBox").GetComponent<Text>().text = "I have to discover the tile first !"; print("I have to discover the tile first !");
+                else GameObject.Find("InfoTextBox").GetComponent<Text>().text = "I have to discover the tile first ! \n"; print("I have to discover the tile first !");
             }
-            else GameObject.Find("InfoTextBox").GetComponent<Text>().text = "Too much sand ! I have to dig the tile first."; print("Too much sand ! I have to dig the tile first.");
+            else GameObject.Find("InfoTextBox").GetComponent<Text>().text = "Too much sand ! I have to dig the tile first. \n"; print("Too much sand ! I have to dig the tile first.");
         }
-        else GameObject.Find("InfoTextBox").GetComponent<Text>().text = "Cannot act anymore this turn..."; print("Cannot act anymore this turn...");
+        else GameObject.Find("InfoTextBox").GetComponent<Text>().text = "Cannot act anymore this turn... \n"; print("Cannot act anymore this turn...");
 	}
 
 	// Use an item (ITEMS NOT IMPLEMENTED)
