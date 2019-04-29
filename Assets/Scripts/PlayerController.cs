@@ -39,7 +39,9 @@ public class PlayerController : MonoBehaviour
 			piece4 = false;
 			hitPoints = 4;
 			actionPoints = 4;
-		}
+            hitPointTextbox.text = "Hit Points : " + hitPoints;
+            actionPointTextbox.text = "Action Points : " + actionPoints;
+        }
 	}
 
 	// Translate character sprite
