@@ -26,7 +26,7 @@ A la fin du tour, il pioche un certain nombre de cartes selon le niveau de diffi
  Toutes les cases (ou tuiles) ont un type :
  - *HP? / VP?* : les indices horizontaux (*HP?*) et verticaux (*VP?*) des pièces. La pièce *?* se trouve sur la case au croisement de ces directions.
  - *STORM* : La tornade effectue des actions à la fin de chaque tour selon la carte piochée : 
-  	- Elle se déplace de 1, 2, ou 3 cases. Lorsqu'elle bouge elle décale les tuiles et dépose du sable sur son passage .
+  	- Elle se déplace de 1, 2, ou 3 cases. Lorsqu'elle bouge elle décale les tuiles et dépose du sable sur son passage. Quand une tuile est ensevelie deux fois ou plus, il est impossible pour le joueur qui est dessus de se déplacer.
   	- Elle entraîne une vague de chaleur qui fait perdre un point de vie au joueur.
    Le joueur ne peut pas aller sur cette case. 
   - *TECH* : actionne une ressource pour le joueur qui lui donne des points de vie ou des points d'action.
